@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Detail Collective — Mobile Car Detailing, South West England</title>
+<meta name="description" content="Fully mobile car detailing across Bradford on Avon, Bath and Trowbridge. From everyday valets to specialist prestige care — we come to you.">
+
+<!--
+  BOOKING LINK: every "Book a slot" button below currently points to "#".
+  Replace the href="#" on each .btn-book element with the real Google
+  Calendar appointment-schedule link (or Calendly link) once set up.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --navy: #1a2332;
+    --navy-deep: #0f1520;
+    --gold: #c9a961;
+    --gold-soft: #a68a5b;
+    --cream: #f5f0e6;
+    --paper: #faf7f0;
+    --ink: #1c2129;
+
+    --font-display: 'Big Shoulders Display', sans-serif;
+    --font-body: 'Manrope', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    --radius-s: 4px;
+    --radius-m: 6px;
+    --radius-l: 10px;
+
+    --container: 1120px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img, svg { max-width: 100%; display: block; }
+
+  .wrap {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  a { color: inherit; }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .eyebrow.on-dark { color: var(--gold); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    padding: 13px 26px;
+    border-radius: var(--radius-s);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .btn-book {
+    background: var(--gold);
+    color: var(--navy-deep);
+  }
+  .btn-book:hover { background: var(--gold-soft); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--cream);
+    border-color: rgba(245, 240, 230, 0.35);
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* Nav */
+  header.site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(26, 35, 50, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.18);
+  }
+
+  .site-nav .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 76px;
+  }
+
+  .wordmark {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--cream);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  .site-nav .btn-book { padding: 10px 20px; font-size: 13px; }
+
+  /* Hero */
+  .hero {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 96px 0 80px;
+  }
+
+  .hero .wrap {
+    display: grid;
+    gap: 48px;
+  }
+
+  .hero-copy { max-width: 640px; }
+
+  .hero h1 {
+    font-size: clamp(40px, 6vw, 68px);
+    line-height: 1.04;
+    color: var(--cream);
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(245, 240, 230, 0.78);
+    max-width: 520px;
+    margin: 22px 0 32px;
+  }
+
+  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  /* Spec strip */
+  .spec-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 44px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(245, 240, 230, 0.14);
+  }
+
+  .spec-item {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(201, 169, 97, 0.4);
+    border-radius: var(--radius-s);
+    padding: 8px 14px;
+  }
+
+  /* Hero media placeholder */
+  .media-slot {
+    border: 1px dashed rgba(201, 169, 97, 0.45);
+    border-radius: var(--radius-l);
+    background: rgba(245, 240, 230, 0.03);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    padding: 24px;
+    color: rgba(245, 240, 230, 0.55);
+  }
+
+  .media-slot .tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .media-slot .icon {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(201, 169, 97, 0.5);
+    border-radius: var(--radius-s);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero .media-slot { min-height: 320px; }
+
+  /* Sections (light) */
+  section.on-paper { padding: 96px 0; }
+  section.on-paper .section-head { max-width: 620px; margin-bottom: 56px; }
+  section.on-paper h2 {
+    font-size: clamp(30px, 4vw, 44px);
+    color: var(--ink);
+    line-height: 1.08;
+  }
+
+  /* Services */
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .service-card {
+    background: #fff;
+    border: 1px solid rgba(28, 33, 41, 0.08);
+    border-radius: var(--radius-l);
+    padding: 36px 32px;
+  }
+
+  .service-card .tier-name {
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--ink);
+  }
+
+  .service-card .price {
+    font-family: var(--font-display);
+    font-size: 40px;
+    color: var(--navy);
+    margin: 6px 0 4px;
+  }
+
+  .service-card .price .unit {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gold-soft);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    margin-left: 6px;
+  }
+
+  .service-card.prestige {
+    border-color: rgba(201, 169, 97, 0.5);
+    box-shadow: 0 0 0 1px rgba(201, 169, 97, 0.18);
+  }
+
+  .spec-group { margin-top: 26px; }
+
+  .spec-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .spec-list {
+    list-style: none;
+    margin: 0 0 22px;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+
+  .spec-list li {
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .spec-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }
+
+  .service-card .btn { width: 100%; margin-top: 8px; }
+  .service-card .btn-book { background: var(--navy); color: var(--cream); }
+  .service-card .btn-book:hover { background: var(--navy-deep); }
+  .service-card.prestige .btn-book { background: var(--gold); color: var(--navy-deep); }
+  .service-card.prestige .btn-book:hover { background: var(--gold-soft); }
+
+  /* The work */
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .work-grid .media-slot {
+    aspect-ratio: 4 / 3;
+    border-color: rgba(28, 33, 41, 0.22);
+    color: rgba(28, 33, 41, 0.45);
+    background: rgba(28, 33, 41, 0.02);
+  }
+
+  .work-grid .media-slot .tag { color: var(--gold-soft); }
+  .work-grid .media-slot .icon { border-color: rgba(28, 33, 41, 0.3); }
+
+  /* Footer */
+  footer {
+    background: var(--navy-deep);
+    color: var(--cream);
+    padding: 64px 0 40px;
+  }
+
+  footer .wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+  }
+
+  footer .tagline {
+    color: rgba(245, 240, 230, 0.65);
+    max-width: 420px;
+    font-size: 15px;
+  }
+
+  footer .foot-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(245, 240, 230, 0.12);
+  }
+
+  footer .region {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* Responsive */
+  @media (min-width: 860px) {
+    .hero .wrap {
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+    }
+  }
+
+  @media (max-width: 859px) {
+    .service-grid { grid-template-columns: 1fr; }
+    .work-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 560px) {
+    .work-grid { grid-template-columns: 1fr; }
+    footer .foot-bottom { flex-direction: column; align-items: flex-start; }
+    .site-nav .btn-book { padding: 9px 16px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="wrap">
+    <a href="#" class="wordmark">The Detail Collective</a>
+    <a href="#" class="btn btn-book">Book a slot</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy reveal">
+      <span class="eyebrow on-dark">Mobile detailing · South West</span>
+      <h1>A showroom finish, delivered to your door.</h1>
+      <p class="hero-sub">Fully mobile car detailing across the South West — from everyday valets to specialist prestige care.</p>
+      <div class="hero-cta">
+        <a href="#" class="btn btn-book">Book a slot</a>
+        <a href="#services" class="btn btn-outline">View services</a>
+      </div>
+      <div class="spec-strip">
+        <span class="spec-item">Mobile</span>
+        <span class="spec-item">South West</span>
+        <span class="spec-item">Standard + Prestige</span>
+      </div>
+    </div>
+    <div class="media-slot reveal">
+      <div class="icon">▶</div>
+      <span class="tag">Photo / Video — Hero</span>
+    </div>
+  </div>
+</section>
+
+<section id="services" class="on-paper">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Services</span>
+      <h2>Two ways we take care of your car.</h2>
+    </div>
+
+    <div class="service-grid">
+      <div class="service-card reveal">
+        <div class="tier-name">Standard Detail</div>
+        <div class="price">£70</div>
+
+        <div class="spec-group">
+          <span class="spec-label">Exterior</span>
+          <ul class="spec-list">
+            <li>Prewash</li>
+            <li>Snowfoam</li>
+            <li>In-depth contact wash</li>
+          </ul>
+
+          <span class="spec-label">Interior</span>
+          <ul class="spec-list">
+            <li>Vacuum, carpets &amp; seats</li>
+          </ul>
+        </div>
+
+        <a href="#" class="btn btn-book">Book a slot</a>
+      </div>
+
+      <div class="service-card prestige reveal">
+        <div class="tier-name">Prestige Detail</div>
+        <div class="price">Enquire<span class="unit">Price on application</span></div>
+
+        <div class="spec-group">
+          <span class="spec-label">Exterior</span>
+          <ul class="spec-list">
+            <li>Prewash</li>
+            <li>Snowfoam</li>
+            <li>In-depth contact wash</li>
+            <li>Non-acid wheel cleaner</li>
+            <li>Windows polished, inside &amp; out</li>
+            <li>Tyre dressing</li>
+            <li>Ceramic rinse</li>
+            <li>Engine bay clean</li>
+          </ul>
+
+          <span class="spec-label">Interior</span>
+          <ul class="spec-list">
+            <li>Wet vacuum, carpets &amp; seats</li>
+            <li>Interior deep clean</li>
+            <li>Carpet detail</li>
+          </ul>
+        </div>
+
+        <a href="#" class="btn btn-book">Enquire about Prestige</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="on-paper" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">The work</span>
+      <h2>Recent details.</h2>
+    </div>
+
+    <div class="work-grid">
+      <div class="media-slot reveal">
+        <div class="icon">◱</div>
+        <span class="tag">Photo — 01</span>
+      </div>
+      <div class="media-slot reveal">
+        <div class="icon">◱</div>
+        <span class="tag">Photo — 02</span>
+      </div>
+      <div class="media-slot reveal">
+        <div class="icon">▶</div>
+        <span class="tag">Video — 01</span>
+      </div>
+      <div class="media-slot reveal">
+        <div class="icon">◱</div>
+        <span class="tag">Photo — 03</span>
+      </div>
+      <div class="media-slot reveal">
+        <div class="icon">◱</div>
+        <span class="tag">Photo — 04</span>
+      </div>
+      <div class="media-slot reveal">
+        <div class="icon">▶</div>
+        <span class="tag">Video — 02</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="wordmark">The Detail Collective</div>
+    <p class="tagline">Mobile car detailing across the South West. We come to you, home or work.</p>
+    <a href="#" class="btn btn-book">Book a slot</a>
+    <div class="foot-bottom">
+      <span class="region">South West England</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var targets = document.querySelectorAll('.reveal');
+
+    if (prefersReduced || !('IntersectionObserver' in window)) {
+      targets.forEach(function (el) { el.classList.add('in-view'); });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    targets.forEach(function (el) { observer.observe(el); });
+  })();
+</script>
+
+</body>
+</html>
