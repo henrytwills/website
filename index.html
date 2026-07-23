@@ -14,25 +14,23 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --navy: #1a2332;
-    --navy-deep: #0f1520;
-    --gold: #c9a961;
-    --gold-soft: #a68a5b;
-    --cream: #f5f0e6;
-    --paper: #faf7f0;
-    --ink: #1c2129;
+    --black: #0a0a0c;
+    --charcoal: #1a1a1e;
+    --panel: #f2f0e8;
+    --red: #ff2438;
+    --red-deep: #c2101f;
+    --lime: #ccff33;
+    --lime-deep: #a6d928;
+    --grey: #9a9aa4;
+    --white: #f5f5f3;
 
     --font-display: 'Big Shoulders Display', sans-serif;
     --font-body: 'Manrope', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
-
-    --radius-s: 4px;
-    --radius-m: 6px;
-    --radius-l: 10px;
 
     --container: 1120px;
   }
@@ -42,12 +40,13 @@
 
   body {
     margin: 0;
-    background: var(--paper);
-    color: var(--ink);
+    background: var(--black);
+    color: var(--white);
     font-family: var(--font-body);
     font-weight: 400;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   img, svg { max-width: 100%; display: block; }
@@ -62,64 +61,82 @@
 
   h1, h2, h3 {
     font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.01em;
+    font-weight: 800;
+    letter-spacing: 0.005em;
     margin: 0;
+    text-transform: uppercase;
   }
+
+  .hi { color: var(--red); }
 
   .eyebrow {
     font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 12px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold-soft);
-    display: block;
-    margin-bottom: 14px;
-  }
-
-  .eyebrow.on-dark { color: var(--gold); }
-
-  /* Buttons */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: var(--font-body);
     font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.02em;
-    text-decoration: none;
-    padding: 13px 26px;
-    border-radius: var(--radius-s);
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--red);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
   }
+
+  .eyebrow::before {
+    content: "";
+    width: 22px;
+    height: 2px;
+    background: var(--lime);
+    display: inline-block;
+  }
+
+  .eyebrow.on-panel { color: var(--red-deep); }
+
+  /* Buttons — skewed, motorsport-flag energy */
+  .btn {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 15px 2px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transform: skewX(-12deg);
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  }
+  .btn span {
+    display: block;
+    padding: 0 22px;
+    transform: skewX(12deg);
+  }
+  .btn:hover { transform: skewX(-12deg) translateY(-2px); }
 
   .btn-book {
-    background: var(--gold);
-    color: var(--navy-deep);
+    background: var(--red);
+    color: var(--black);
+    border-color: var(--red);
   }
-  .btn-book:hover { background: var(--gold-soft); }
+  .btn-book:hover { background: var(--lime); border-color: var(--lime); color: var(--black); }
 
   .btn-outline {
     background: transparent;
-    color: var(--cream);
-    border-color: rgba(245, 240, 230, 0.35);
+    color: var(--white);
+    border-color: rgba(245, 245, 243, 0.4);
   }
-  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-outline:hover { border-color: var(--lime); color: var(--lime); }
 
   /* Nav */
   header.site-nav {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(26, 35, 50, 0.82);
+    background: rgba(10, 10, 12, 0.85);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(201, 169, 97, 0.18);
+    border-bottom: 3px solid var(--red);
   }
 
   .site-nav .wrap {
@@ -131,178 +148,241 @@
 
   .wordmark {
     font-family: var(--font-display);
+    font-weight: 800;
     font-size: 22px;
-    color: var(--cream);
+    text-transform: uppercase;
+    color: var(--white);
     text-decoration: none;
     letter-spacing: 0.01em;
     white-space: nowrap;
+    position: relative;
   }
 
-  .site-nav .btn-book { padding: 10px 20px; font-size: 13px; }
+  .site-nav .btn { padding: 11px 2px; }
+  .site-nav .btn span { padding: 0 18px; }
 
   /* Hero */
   .hero {
-    background: var(--navy);
-    color: var(--cream);
-    padding: 96px 0 80px;
+    position: relative;
+    z-index: 2;
+    background: var(--black);
+    color: var(--white);
+    padding: 108px 0 170px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 64px), 0 100%);
+    margin-bottom: -64px;
+    overflow: hidden;
   }
 
-  .hero .wrap {
-    display: grid;
-    gap: 48px;
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 60%;
+    height: 140%;
+    background: repeating-linear-gradient(
+      115deg,
+      rgba(255, 36, 56, 0.14) 0px,
+      rgba(255, 36, 56, 0.14) 2px,
+      transparent 2px,
+      transparent 46px
+    );
+    pointer-events: none;
   }
+
+  .hero .wrap { position: relative; display: grid; gap: 48px; }
 
   .hero-copy { max-width: 640px; }
 
   .hero h1 {
-    font-size: clamp(40px, 6vw, 68px);
-    line-height: 1.04;
-    color: var(--cream);
+    font-size: clamp(44px, 7vw, 78px);
+    line-height: 0.98;
+    color: var(--white);
   }
 
   .hero-sub {
     font-size: 18px;
-    color: rgba(245, 240, 230, 0.78);
+    color: rgba(245, 245, 243, 0.72);
     max-width: 520px;
-    margin: 22px 0 32px;
+    margin: 24px 0 34px;
   }
 
-  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .hero-cta { display: flex; gap: 18px; flex-wrap: wrap; }
 
   /* Spec strip */
   .spec-strip {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 44px;
+    gap: 12px;
+    margin-top: 48px;
     padding-top: 28px;
-    border-top: 1px solid rgba(245, 240, 230, 0.14);
+    border-top: 1px solid rgba(245, 245, 243, 0.16);
   }
 
   .spec-item {
     font-family: var(--font-mono);
     font-size: 11px;
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--gold);
-    border: 1px solid rgba(201, 169, 97, 0.4);
-    border-radius: var(--radius-s);
-    padding: 8px 14px;
+    color: var(--black);
+    background: var(--lime);
+    padding: 9px 16px;
+    transform: skewX(-12deg);
   }
+  .spec-item span { display: block; transform: skewX(12deg); }
+  .spec-item:nth-child(2) { background: var(--white); }
+  .spec-item:nth-child(3) { background: var(--red); color: var(--white); }
 
-  /* Hero media placeholder */
+  /* Media placeholder — hazard-stripe empty state */
   .media-slot {
-    border: 1px dashed rgba(201, 169, 97, 0.45);
-    border-radius: var(--radius-l);
-    background: rgba(245, 240, 230, 0.03);
+    position: relative;
+    border: 2px solid var(--red);
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgba(255, 36, 56, 0.10) 0px,
+        rgba(255, 36, 56, 0.10) 12px,
+        rgba(204, 255, 51, 0.06) 12px,
+        rgba(204, 255, 51, 0.06) 24px
+      ),
+      var(--black);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
     text-align: center;
     padding: 24px;
-    color: rgba(245, 240, 230, 0.55);
+    color: rgba(245, 245, 243, 0.7);
   }
 
   .media-slot .tag {
     font-family: var(--font-mono);
     font-size: 11px;
+    font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--lime);
+    background: var(--black);
+    padding: 4px 10px;
   }
 
   .media-slot .icon {
-    width: 34px;
-    height: 34px;
-    border: 1px solid rgba(201, 169, 97, 0.5);
-    border-radius: var(--radius-s);
+    width: 38px;
+    height: 38px;
+    border: 2px solid var(--lime);
+    color: var(--lime);
     display: flex;
     align-items: center;
     justify-content: center;
+    background: var(--black);
   }
 
-  .hero .media-slot { min-height: 320px; }
+  .hero .media-slot { min-height: 340px; }
 
-  /* Sections (light) */
-  section.on-paper { padding: 96px 0; }
-  section.on-paper .section-head { max-width: 620px; margin-bottom: 56px; }
-  section.on-paper h2 {
-    font-size: clamp(30px, 4vw, 44px);
-    color: var(--ink);
-    line-height: 1.08;
+  /* Sections */
+  section.on-dark { padding: 96px 0; position: relative; }
+  #services { background: var(--charcoal); padding-top: 190px; z-index: 1; }
+  #work { background: var(--black); }
+
+  section .section-head { max-width: 620px; margin-bottom: 56px; }
+  section h2 {
+    font-size: clamp(32px, 4.2vw, 46px);
+    color: var(--white);
+    line-height: 1.02;
   }
 
   /* Services */
   .service-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 28px;
+    gap: 32px;
     align-items: start;
   }
 
   .service-card {
-    background: #fff;
-    border: 1px solid rgba(28, 33, 41, 0.08);
-    border-radius: var(--radius-l);
-    padding: 36px 32px;
+    position: relative;
+    background: var(--panel);
+    color: var(--black);
+    padding: 46px 34px 38px;
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
   }
+
+  .service-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: var(--red);
+  }
+
+  .service-card.prestige::before { background: var(--lime); }
 
   .service-card .tier-name {
     font-family: var(--font-display);
+    font-weight: 800;
     font-size: 26px;
-    color: var(--ink);
+    text-transform: uppercase;
+    color: var(--black);
   }
 
   .service-card .price {
     font-family: var(--font-display);
-    font-size: 40px;
-    color: var(--navy);
-    margin: 6px 0 4px;
+    font-weight: 800;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--red);
+    margin: 10px 0 4px;
   }
 
+  .service-card.prestige .price { color: var(--red-deep); }
+
   .service-card .price .unit {
+    display: block;
     font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--gold-soft);
+    font-size: 12px;
+    color: #6b6b6f;
     font-weight: 500;
     letter-spacing: 0.06em;
-    margin-left: 6px;
+    text-transform: uppercase;
+    margin-top: 8px;
   }
 
   .service-card.prestige {
-    border-color: rgba(201, 169, 97, 0.5);
-    box-shadow: 0 0 0 1px rgba(201, 169, 97, 0.18);
+    box-shadow: 0 0 0 2px var(--lime);
   }
 
-  .spec-group { margin-top: 26px; }
+  .spec-group { margin-top: 28px; }
 
   .spec-label {
     font-family: var(--font-mono);
     font-size: 11px;
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--gold-soft);
-    display: block;
-    margin-bottom: 10px;
+    color: var(--black);
+    background: var(--lime);
+    display: inline-block;
+    padding: 3px 8px;
+    margin-bottom: 12px;
   }
 
   .spec-list {
     list-style: none;
-    margin: 0 0 22px;
+    margin: 0 0 24px;
     padding: 0;
     font-family: var(--font-mono);
     font-size: 13.5px;
-    color: var(--ink);
+    color: var(--black);
   }
 
   .spec-list li {
     padding-left: 20px;
     position: relative;
-    margin-bottom: 8px;
+    margin-bottom: 9px;
     line-height: 1.4;
   }
 
@@ -310,36 +390,39 @@
     content: "—";
     position: absolute;
     left: 0;
-    color: var(--gold);
+    color: var(--red);
+    font-weight: 700;
   }
 
   .service-card .btn { width: 100%; margin-top: 8px; }
-  .service-card .btn-book { background: var(--navy); color: var(--cream); }
-  .service-card .btn-book:hover { background: var(--navy-deep); }
-  .service-card.prestige .btn-book { background: var(--gold); color: var(--navy-deep); }
-  .service-card.prestige .btn-book:hover { background: var(--gold-soft); }
+  .service-card .btn span { width: 100%; text-align: center; }
+  .service-card .btn-book { background: var(--black); color: var(--white); border-color: var(--black); }
+  .service-card .btn-book:hover { background: var(--red); border-color: var(--red); color: var(--black); }
+  .service-card.prestige .btn-book { background: var(--red); color: var(--black); border-color: var(--red); }
+  .service-card.prestige .btn-book:hover { background: var(--lime); border-color: var(--lime); }
 
   /* The work */
   .work-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 22px;
   }
 
-  .work-grid .media-slot {
-    aspect-ratio: 4 / 3;
-    border-color: rgba(28, 33, 41, 0.22);
-    color: rgba(28, 33, 41, 0.45);
-    background: rgba(28, 33, 41, 0.02);
-  }
+  .work-grid .media-slot { aspect-ratio: 4 / 3; }
 
-  .work-grid .media-slot .tag { color: var(--gold-soft); }
-  .work-grid .media-slot .icon { border-color: rgba(28, 33, 41, 0.3); }
+  /* Checkered divider — finish-line motif */
+  .checker-strip {
+    height: 26px;
+    background-image:
+      repeating-conic-gradient(var(--white) 0% 25%, var(--black) 0% 50%);
+    background-size: 26px 26px;
+    background-color: var(--black);
+  }
 
   /* Footer */
   footer {
-    background: var(--navy-deep);
-    color: var(--cream);
+    background: var(--black);
+    color: var(--white);
     padding: 64px 0 40px;
   }
 
@@ -351,7 +434,7 @@
   }
 
   footer .tagline {
-    color: rgba(245, 240, 230, 0.65);
+    color: rgba(245, 245, 243, 0.6);
     max-width: 420px;
     font-size: 15px;
   }
@@ -365,15 +448,16 @@
     gap: 16px;
     margin-top: 24px;
     padding-top: 24px;
-    border-top: 1px solid rgba(245, 240, 230, 0.12);
+    border-top: 1px solid rgba(245, 245, 243, 0.14);
   }
 
   footer .region {
     font-family: var(--font-mono);
     font-size: 11px;
+    font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--gold-soft);
+    color: var(--lime);
   }
 
   /* Scroll reveal */
@@ -407,12 +491,14 @@
   @media (max-width: 859px) {
     .service-grid { grid-template-columns: 1fr; }
     .work-grid { grid-template-columns: repeat(2, 1fr); }
+    #services { padding-top: 150px; }
+    .hero { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), 0 100%); margin-bottom: -40px; }
   }
 
   @media (max-width: 560px) {
     .work-grid { grid-template-columns: 1fr; }
     footer .foot-bottom { flex-direction: column; align-items: flex-start; }
-    .site-nav .btn-book { padding: 9px 16px; font-size: 12px; }
+    .site-nav .btn span { padding: 0 14px; }
   }
 </style>
 </head>
@@ -421,24 +507,24 @@
 <header class="site-nav">
   <div class="wrap">
     <a href="#" class="wordmark">The Detail Collective</a>
-    <a href="#" class="btn btn-book">Book a slot</a>
+    <a href="#" class="btn btn-book"><span>Book a slot</span></a>
   </div>
 </header>
 
 <section class="hero">
   <div class="wrap">
     <div class="hero-copy reveal">
-      <span class="eyebrow on-dark">Mobile detailing · South West</span>
-      <h1>A showroom finish, delivered to your door.</h1>
+      <span class="eyebrow">Mobile detailing · South West</span>
+      <h1>A showroom finish, <span class="hi">delivered</span> to your door.</h1>
       <p class="hero-sub">Fully mobile car detailing across the South West — from everyday valets to specialist prestige care.</p>
       <div class="hero-cta">
-        <a href="#" class="btn btn-book">Book a slot</a>
-        <a href="#services" class="btn btn-outline">View services</a>
+        <a href="#" class="btn btn-book"><span>Book a slot</span></a>
+        <a href="#services" class="btn btn-outline"><span>View services</span></a>
       </div>
       <div class="spec-strip">
-        <span class="spec-item">Mobile</span>
-        <span class="spec-item">South West</span>
-        <span class="spec-item">Standard + Prestige</span>
+        <span class="spec-item"><span>Mobile</span></span>
+        <span class="spec-item"><span>South West</span></span>
+        <span class="spec-item"><span>Standard + Prestige</span></span>
       </div>
     </div>
     <div class="media-slot reveal">
@@ -448,7 +534,7 @@
   </div>
 </section>
 
-<section id="services" class="on-paper">
+<section id="services" class="on-dark">
   <div class="wrap">
     <div class="section-head reveal">
       <span class="eyebrow">Services</span>
@@ -474,7 +560,7 @@
           </ul>
         </div>
 
-        <a href="#" class="btn btn-book">Book a slot</a>
+        <a href="#" class="btn btn-book"><span>Book a slot</span></a>
       </div>
 
       <div class="service-card prestige reveal">
@@ -502,13 +588,13 @@
           </ul>
         </div>
 
-        <a href="#" class="btn btn-book">Enquire about Prestige</a>
+        <a href="#" class="btn btn-book"><span>Enquire about Prestige</span></a>
       </div>
     </div>
   </div>
 </section>
 
-<section class="on-paper" style="padding-top:0;">
+<section id="work" class="on-dark">
   <div class="wrap">
     <div class="section-head reveal">
       <span class="eyebrow">The work</span>
@@ -544,11 +630,13 @@
   </div>
 </section>
 
+<div class="checker-strip"></div>
+
 <footer>
   <div class="wrap">
     <div class="wordmark">The Detail Collective</div>
     <p class="tagline">Mobile car detailing across the South West. We come to you, home or work.</p>
-    <a href="#" class="btn btn-book">Book a slot</a>
+    <a href="#" class="btn btn-book"><span>Book a slot</span></a>
     <div class="foot-bottom">
       <span class="region">South West England</span>
     </div>
