@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Detail Collective — Mobile Car Detailing, South West England</title>
 <meta name="description" content="Fully mobile car detailing across Bradford on Avon, Bath and Trowbridge. From everyday valets to specialist prestige care — we come to you.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%231b1815'/%3E%3Cg fill='none' stroke='%2333513f' stroke-width='1.6'%3E%3Ccircle cx='24' cy='24' r='16'/%3E%3Cpolygon points='24,18 19,21 19,27 24,30 29,27 29,21'/%3E%3C/g%3E%3C/svg%3E">
 
 <!--
   BOOKING LINK: every "Book a slot" button below currently points to "#".
@@ -14,657 +15,262 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-  :root {
-    --black: #0a0a0c;
-    --charcoal: #1a1a1e;
-    --panel: #f2f0e8;
-    --red: #ff2438;
-    --red-deep: #c2101f;
-    --lime: #ccff33;
-    --lime-deep: #a6d928;
-    --grey: #9a9aa4;
-    --white: #f5f5f3;
+<link rel="stylesheet" href="assets/styles.css">
 
-    --font-display: 'Big Shoulders Display', sans-serif;
-    --font-body: 'Manrope', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-
-    --container: 1120px;
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/three.module.min.js",
+    "three/addons/": "./vendor/three/examples/jsm/"
   }
-
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    margin: 0;
-    background: var(--black);
-    color: var(--white);
-    font-family: var(--font-body);
-    font-weight: 400;
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-
-  img, svg { max-width: 100%; display: block; }
-
-  .wrap {
-    max-width: var(--container);
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
-  a { color: inherit; }
-
-  h1, h2, h3 {
-    font-family: var(--font-display);
-    font-weight: 800;
-    letter-spacing: 0.005em;
-    margin: 0;
-    text-transform: uppercase;
-  }
-
-  .hi { color: var(--red); }
-
-  .eyebrow {
-    font-family: var(--font-mono);
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--red);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .eyebrow::before {
-    content: "";
-    width: 22px;
-    height: 2px;
-    background: var(--lime);
-    display: inline-block;
-  }
-
-  .eyebrow.on-panel { color: var(--red-deep); }
-
-  /* Buttons — skewed, motorsport-flag energy */
-  .btn {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 15px 2px;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transform: skewX(-12deg);
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-  }
-  .btn span {
-    display: block;
-    padding: 0 22px;
-    transform: skewX(12deg);
-  }
-  .btn:hover { transform: skewX(-12deg) translateY(-2px); }
-
-  .btn-book {
-    background: var(--red);
-    color: var(--black);
-    border-color: var(--red);
-  }
-  .btn-book:hover { background: var(--lime); border-color: var(--lime); color: var(--black); }
-
-  .btn-outline {
-    background: transparent;
-    color: var(--white);
-    border-color: rgba(245, 245, 243, 0.4);
-  }
-  .btn-outline:hover { border-color: var(--lime); color: var(--lime); }
-
-  /* Nav */
-  header.site-nav {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: rgba(10, 10, 12, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 3px solid var(--red);
-  }
-
-  .site-nav .wrap {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 76px;
-  }
-
-  .wordmark {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 22px;
-    text-transform: uppercase;
-    color: var(--white);
-    text-decoration: none;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-    position: relative;
-  }
-
-  .site-nav .btn { padding: 11px 2px; }
-  .site-nav .btn span { padding: 0 18px; }
-
-  /* Hero */
-  .hero {
-    position: relative;
-    z-index: 2;
-    background: var(--black);
-    color: var(--white);
-    padding: 108px 0 170px;
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 64px), 0 100%);
-    margin-bottom: -64px;
-    overflow: hidden;
-  }
-
-  .hero::after {
-    content: "";
-    position: absolute;
-    top: -20%;
-    right: -10%;
-    width: 60%;
-    height: 140%;
-    background: repeating-linear-gradient(
-      115deg,
-      rgba(255, 36, 56, 0.14) 0px,
-      rgba(255, 36, 56, 0.14) 2px,
-      transparent 2px,
-      transparent 46px
-    );
-    pointer-events: none;
-  }
-
-  .hero .wrap { position: relative; display: grid; gap: 48px; }
-
-  .hero-copy { max-width: 640px; }
-
-  .hero h1 {
-    font-size: clamp(44px, 7vw, 78px);
-    line-height: 0.98;
-    color: var(--white);
-  }
-
-  .hero-sub {
-    font-size: 18px;
-    color: rgba(245, 245, 243, 0.72);
-    max-width: 520px;
-    margin: 24px 0 34px;
-  }
-
-  .hero-cta { display: flex; gap: 18px; flex-wrap: wrap; }
-
-  /* Spec strip */
-  .spec-strip {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 48px;
-    padding-top: 28px;
-    border-top: 1px solid rgba(245, 245, 243, 0.16);
-  }
-
-  .spec-item {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--black);
-    background: var(--lime);
-    padding: 9px 16px;
-    transform: skewX(-12deg);
-  }
-  .spec-item span { display: block; transform: skewX(12deg); }
-  .spec-item:nth-child(2) { background: var(--white); }
-  .spec-item:nth-child(3) { background: var(--red); color: var(--white); }
-
-  /* Media placeholder — hazard-stripe empty state */
-  .media-slot {
-    position: relative;
-    border: 2px solid var(--red);
-    background:
-      repeating-linear-gradient(
-        45deg,
-        rgba(255, 36, 56, 0.10) 0px,
-        rgba(255, 36, 56, 0.10) 12px,
-        rgba(204, 255, 51, 0.06) 12px,
-        rgba(204, 255, 51, 0.06) 24px
-      ),
-      var(--black);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    text-align: center;
-    padding: 24px;
-    color: rgba(245, 245, 243, 0.7);
-  }
-
-  .media-slot .tag {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--lime);
-    background: var(--black);
-    padding: 4px 10px;
-  }
-
-  .media-slot .icon {
-    width: 38px;
-    height: 38px;
-    border: 2px solid var(--lime);
-    color: var(--lime);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--black);
-  }
-
-  .hero .media-slot { min-height: 340px; }
-
-  /* Sections */
-  section.on-dark { padding: 96px 0; position: relative; }
-  #services { background: var(--charcoal); padding-top: 190px; z-index: 1; }
-  #work { background: var(--black); }
-
-  section .section-head { max-width: 620px; margin-bottom: 56px; }
-  section h2 {
-    font-size: clamp(32px, 4.2vw, 46px);
-    color: var(--white);
-    line-height: 1.02;
-  }
-
-  /* Services */
-  .service-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    align-items: start;
-  }
-
-  .service-card {
-    position: relative;
-    background: var(--panel);
-    color: var(--black);
-    padding: 46px 34px 38px;
-    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
-  }
-
-  .service-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 8px;
-    background: var(--red);
-  }
-
-  .service-card.prestige::before { background: var(--lime); }
-
-  .service-card .tier-name {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 26px;
-    text-transform: uppercase;
-    color: var(--black);
-  }
-
-  .service-card .price {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 56px;
-    line-height: 1;
-    color: var(--red);
-    margin: 10px 0 4px;
-  }
-
-  .service-card.prestige .price { color: var(--red-deep); }
-
-  .service-card .price .unit {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: #6b6b6f;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-top: 8px;
-  }
-
-  .service-card.prestige {
-    box-shadow: 0 0 0 2px var(--lime);
-  }
-
-  .spec-group { margin-top: 28px; }
-
-  .spec-label {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--black);
-    background: var(--lime);
-    display: inline-block;
-    padding: 3px 8px;
-    margin-bottom: 12px;
-  }
-
-  .spec-list {
-    list-style: none;
-    margin: 0 0 24px;
-    padding: 0;
-    font-family: var(--font-mono);
-    font-size: 13.5px;
-    color: var(--black);
-  }
-
-  .spec-list li {
-    padding-left: 20px;
-    position: relative;
-    margin-bottom: 9px;
-    line-height: 1.4;
-  }
-
-  .spec-list li::before {
-    content: "—";
-    position: absolute;
-    left: 0;
-    color: var(--red);
-    font-weight: 700;
-  }
-
-  .service-card .btn { width: 100%; margin-top: 8px; }
-  .service-card .btn span { width: 100%; text-align: center; }
-  .service-card .btn-book { background: var(--black); color: var(--white); border-color: var(--black); }
-  .service-card .btn-book:hover { background: var(--red); border-color: var(--red); color: var(--black); }
-  .service-card.prestige .btn-book { background: var(--red); color: var(--black); border-color: var(--red); }
-  .service-card.prestige .btn-book:hover { background: var(--lime); border-color: var(--lime); }
-
-  /* The work */
-  .work-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-  }
-
-  .work-grid .media-slot { aspect-ratio: 4 / 3; }
-
-  /* Checkered divider — finish-line motif */
-  .checker-strip {
-    height: 26px;
-    background-image:
-      repeating-conic-gradient(var(--white) 0% 25%, var(--black) 0% 50%);
-    background-size: 26px 26px;
-    background-color: var(--black);
-  }
-
-  /* Footer */
-  footer {
-    background: var(--black);
-    color: var(--white);
-    padding: 64px 0 40px;
-  }
-
-  footer .wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 22px;
-  }
-
-  footer .tagline {
-    color: rgba(245, 245, 243, 0.6);
-    max-width: 420px;
-    font-size: 15px;
-  }
-
-  footer .foot-bottom {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(245, 245, 243, 0.14);
-  }
-
-  footer .region {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--lime);
-  }
-
-  /* Scroll reveal */
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .reveal.in-view {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    .reveal {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
-  }
-
-  /* Responsive */
-  @media (min-width: 860px) {
-    .hero .wrap {
-      grid-template-columns: 1.05fr 0.95fr;
-      align-items: center;
-    }
-  }
-
-  @media (max-width: 859px) {
-    .service-grid { grid-template-columns: 1fr; }
-    .work-grid { grid-template-columns: repeat(2, 1fr); }
-    #services { padding-top: 150px; }
-    .hero { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), 0 100%); margin-bottom: -40px; }
-  }
-
-  @media (max-width: 560px) {
-    .work-grid { grid-template-columns: 1fr; }
-    footer .foot-bottom { flex-direction: column; align-items: flex-start; }
-    .site-nav .btn span { padding: 0 14px; }
-  }
-</style>
+}
+</script>
 </head>
-<body>
+<body class="no-js">
 
-<header class="site-nav">
+<header class="site-nav" id="site-nav">
   <div class="wrap">
     <a href="#" class="wordmark">The Detail Collective</a>
-    <a href="#" class="btn btn-book"><span>Book a slot</span></a>
+    <nav class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#work">The work</a>
+      <a href="#about">About</a>
+      <a href="#" class="btn btn-primary btn-book">Book a slot</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span></button>
   </div>
 </header>
 
-<section class="hero">
+<div class="mobile-menu" id="mobile-menu">
+  <nav class="mobile-menu-links">
+    <a href="#services">Services</a>
+    <a href="#work">The work</a>
+    <a href="#about">About</a>
+    <a href="#" class="btn btn-primary btn-book">Book a slot</a>
+  </nav>
+</div>
+
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap" aria-hidden="true">
+    <div class="hero-fallback-glow"></div>
+    <canvas id="hero-canvas"></canvas>
+  </div>
+
   <div class="wrap">
-    <div class="hero-copy reveal">
-      <span class="eyebrow">Mobile detailing · South West</span>
-      <h1>A showroom finish, <span class="hi">delivered</span> to your door.</h1>
-      <p class="hero-sub">Fully mobile car detailing across the South West — from everyday valets to specialist prestige care.</p>
-      <div class="hero-cta">
-        <a href="#" class="btn btn-book"><span>Book a slot</span></a>
-        <a href="#services" class="btn btn-outline"><span>View services</span></a>
-      </div>
-      <div class="spec-strip">
-        <span class="spec-item"><span>Mobile</span></span>
-        <span class="spec-item"><span>South West</span></span>
-        <span class="spec-item"><span>Standard + Prestige</span></span>
+    <div class="hero-copy">
+      <span class="eyebrow on-dark" data-reveal="fade">Mobile detailing — South West England</span>
+      <h1 data-reveal="lines">A showroom finish,<br><em>delivered</em> to your door.</h1>
+      <p class="hero-sub" data-reveal="fade">Fully mobile car detailing across the South West — from everyday valets to specialist prestige care, carried out at your home or workplace.</p>
+      <div class="hero-cta" data-reveal="fade">
+        <a href="#" class="btn btn-primary btn-on-dark btn-book">Book a slot</a>
+        <a href="#services" class="link-underline">View services</a>
       </div>
     </div>
-    <div class="media-slot reveal">
-      <div class="icon">▶</div>
-      <span class="tag">Photo / Video — Hero</span>
+
+    <div class="hero-spec" data-reveal="fade">
+      <div><span>Coverage</span><strong>South West</strong></div>
+      <div><span>Base</span><strong>Bradford on Avon</strong></div>
+      <div><span>Tiers</span><strong>Standard &amp; Prestige</strong></div>
+    </div>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="line"></div>
+  </div>
+</section>
+
+<section id="work" class="section-pad">
+  <div class="wrap">
+    <div class="section-head" data-reveal="fade">
+      <span class="eyebrow">The work</span>
+      <h2>Recent details.</h2>
+      <p class="gallery-note">Real jobs land here as they're completed — every frame below is an intentional placeholder, not a stock photo.</p>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="g-tile span-7 tile" data-reveal="wipe">
+        <div class="g-tile-surface"></div>
+        <div class="g-tile-mark"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1"><circle cx="24" cy="24" r="18"/><polygon points="24,17 17.94,20.5 17.94,27.5 24,31 30.06,27.5 30.06,20.5"/><line x1="24" y1="17" x2="24" y2="6"/><line x1="17.94" y1="20.5" x2="8.41" y2="15"/><line x1="17.94" y1="27.5" x2="8.41" y2="33"/><line x1="24" y1="31" x2="24" y2="42"/><line x1="30.06" y1="27.5" x2="39.59" y2="33"/><line x1="30.06" y1="20.5" x2="39.59" y2="15"/></svg></div>
+        <span class="g-tile-tag">Detail — 01</span>
+      </div>
+      <div class="g-tile span-5 tile short" data-reveal="wipe">
+        <div class="g-tile-surface"></div>
+        <div class="g-tile-mark"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1"><circle cx="24" cy="24" r="18"/><polygon points="24,17 17.94,20.5 17.94,27.5 24,31 30.06,27.5 30.06,20.5"/><line x1="24" y1="17" x2="24" y2="6"/><line x1="17.94" y1="20.5" x2="8.41" y2="15"/><line x1="17.94" y1="27.5" x2="8.41" y2="33"/><line x1="24" y1="31" x2="24" y2="42"/><line x1="30.06" y1="27.5" x2="39.59" y2="33"/><line x1="30.06" y1="20.5" x2="39.59" y2="15"/></svg></div>
+        <span class="g-tile-tag">Detail — 02</span>
+      </div>
+      <div class="g-tile span-4 tile tall" data-reveal="wipe">
+        <div class="g-tile-surface"></div>
+        <div class="g-tile-mark"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1"><circle cx="24" cy="24" r="18"/><polygon points="24,17 17.94,20.5 17.94,27.5 24,31 30.06,27.5 30.06,20.5"/><line x1="24" y1="17" x2="24" y2="6"/><line x1="17.94" y1="20.5" x2="8.41" y2="15"/><line x1="17.94" y1="27.5" x2="8.41" y2="33"/><line x1="24" y1="31" x2="24" y2="42"/><line x1="30.06" y1="27.5" x2="39.59" y2="33"/><line x1="30.06" y1="20.5" x2="39.59" y2="15"/></svg></div>
+        <span class="g-tile-tag">Detail — 03</span>
+      </div>
+      <div class="g-tile span-8 tile" data-reveal="wipe">
+        <div class="g-tile-surface"></div>
+        <div class="g-tile-mark"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1"><circle cx="24" cy="24" r="18"/><polygon points="24,17 17.94,20.5 17.94,27.5 24,31 30.06,27.5 30.06,20.5"/><line x1="24" y1="17" x2="24" y2="6"/><line x1="17.94" y1="20.5" x2="8.41" y2="15"/><line x1="17.94" y1="27.5" x2="8.41" y2="33"/><line x1="24" y1="31" x2="24" y2="42"/><line x1="30.06" y1="27.5" x2="39.59" y2="33"/><line x1="30.06" y1="20.5" x2="39.59" y2="15"/></svg></div>
+        <span class="g-tile-tag">Detail — 04</span>
+      </div>
+      <div class="g-tile span-5 tile short" data-reveal="wipe">
+        <div class="g-tile-surface"></div>
+        <div class="g-tile-mark"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1"><circle cx="24" cy="24" r="18"/><polygon points="24,17 17.94,20.5 17.94,27.5 24,31 30.06,27.5 30.06,20.5"/><line x1="24" y1="17" x2="24" y2="6"/><line x1="17.94" y1="20.5" x2="8.41" y2="15"/><line x1="17.94" y1="27.5" x2="8.41" y2="33"/><line x1="24" y1="31" x2="24" y2="42"/><line x1="30.06" y1="27.5" x2="39.59" y2="33"/><line x1="30.06" y1="20.5" x2="39.59" y2="15"/></svg></div>
+        <span class="g-tile-tag">Detail — 05</span>
+      </div>
+      <div class="g-tile span-7 tile" data-reveal="wipe">
+        <div class="g-tile-surface"></div>
+        <div class="g-tile-mark"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1"><circle cx="24" cy="24" r="18"/><polygon points="24,17 17.94,20.5 17.94,27.5 24,31 30.06,27.5 30.06,20.5"/><line x1="24" y1="17" x2="24" y2="6"/><line x1="17.94" y1="20.5" x2="8.41" y2="15"/><line x1="17.94" y1="27.5" x2="8.41" y2="33"/><line x1="24" y1="31" x2="24" y2="42"/><line x1="30.06" y1="27.5" x2="39.59" y2="33"/><line x1="30.06" y1="20.5" x2="39.59" y2="15"/></svg></div>
+        <span class="g-tile-tag">Detail — 06</span>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="services" class="on-dark">
+<section id="services" class="section-pad on-paper-deep">
   <div class="wrap">
-    <div class="section-head reveal">
+    <div class="section-head" data-reveal="fade">
       <span class="eyebrow">Services</span>
       <h2>Two ways we take care of your car.</h2>
+      <p class="lede">Visible pricing, always — the Standard tier is fixed, and Prestige work is scoped with you before we start.</p>
     </div>
 
     <div class="service-grid">
-      <div class="service-card reveal">
-        <div class="tier-name">Standard Detail</div>
-        <div class="price">£70</div>
+      <div class="svc-panel" data-reveal="rise">
+        <span class="svc-index">01 — Everyday care</span>
+        <h3>Standard Detail</h3>
+        <div class="svc-price">£70</div>
 
-        <div class="spec-group">
-          <span class="spec-label">Exterior</span>
-          <ul class="spec-list">
-            <li>Prewash</li>
-            <li>Snowfoam</li>
-            <li>In-depth contact wash</li>
+        <div class="svc-rule"></div>
+
+        <div class="svc-group">
+          <span class="svc-group-label">Exterior</span>
+          <ul class="svc-list">
+            <li><span>Prewash</span></li>
+            <li><span>Snowfoam</span></li>
+            <li><span>In-depth contact wash</span></li>
           </ul>
-
-          <span class="spec-label">Interior</span>
-          <ul class="spec-list">
-            <li>Vacuum, carpets &amp; seats</li>
+        </div>
+        <div class="svc-group">
+          <span class="svc-group-label">Interior</span>
+          <ul class="svc-list">
+            <li><span>Vacuum, carpets &amp; seats</span></li>
           </ul>
         </div>
 
-        <a href="#" class="btn btn-book"><span>Book a slot</span></a>
+        <a href="#" class="btn btn-ghost btn-book">Book a slot</a>
       </div>
 
-      <div class="service-card prestige reveal">
-        <div class="tier-name">Prestige Detail</div>
-        <div class="price">Enquire<span class="unit">Price on application</span></div>
+      <div class="svc-panel prestige" data-reveal="rise">
+        <span class="svc-index">02 — Performance &amp; prestige</span>
+        <h3>Prestige Detail</h3>
+        <div class="svc-price">Enquire<span class="unit">Price on application</span></div>
 
-        <div class="spec-group">
-          <span class="spec-label">Exterior</span>
-          <ul class="spec-list">
-            <li>Prewash</li>
-            <li>Snowfoam</li>
-            <li>In-depth contact wash</li>
-            <li>Non-acid wheel cleaner</li>
-            <li>Windows polished, inside &amp; out</li>
-            <li>Tyre dressing</li>
-            <li>Ceramic rinse</li>
-            <li>Engine bay clean</li>
+        <div class="svc-rule"></div>
+
+        <div class="svc-group">
+          <span class="svc-group-label">Exterior</span>
+          <ul class="svc-list">
+            <li><span>Prewash</span></li>
+            <li><span>Snowfoam</span></li>
+            <li><span>In-depth contact wash</span></li>
+            <li><span>Non-acid wheel cleaner</span></li>
+            <li><span>Windows polished, inside &amp; out</span></li>
+            <li><span>Tyre dressing</span></li>
+            <li><span>Ceramic rinse</span></li>
+            <li><span>Engine bay clean</span></li>
           </ul>
-
-          <span class="spec-label">Interior</span>
-          <ul class="spec-list">
-            <li>Wet vacuum, carpets &amp; seats</li>
-            <li>Interior deep clean</li>
-            <li>Carpet detail</li>
+        </div>
+        <div class="svc-group">
+          <span class="svc-group-label">Interior</span>
+          <ul class="svc-list">
+            <li><span>Wet vacuum, carpets &amp; seats</span></li>
+            <li><span>Interior deep clean</span></li>
+            <li><span>Carpet detail</span></li>
           </ul>
         </div>
 
-        <a href="#" class="btn btn-book"><span>Enquire about Prestige</span></a>
+        <a href="#" class="btn btn-primary btn-book">Enquire about Prestige</a>
       </div>
     </div>
   </div>
 </section>
 
-<section id="work" class="on-dark">
+<section id="about" class="section-pad">
   <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">The work</span>
-      <h2>Recent details.</h2>
-    </div>
-
-    <div class="work-grid">
-      <div class="media-slot reveal">
-        <div class="icon">◱</div>
-        <span class="tag">Photo — 01</span>
+    <div class="about-grid">
+      <div class="about-portrait tile" data-reveal="rise-slow">
+        <div class="g-tile-mark"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1"><circle cx="24" cy="24" r="18"/><polygon points="24,17 17.94,20.5 17.94,27.5 24,31 30.06,27.5 30.06,20.5"/><line x1="24" y1="17" x2="24" y2="6"/><line x1="17.94" y1="20.5" x2="8.41" y2="15"/><line x1="17.94" y1="27.5" x2="8.41" y2="33"/><line x1="24" y1="31" x2="24" y2="42"/><line x1="30.06" y1="27.5" x2="39.59" y2="33"/><line x1="30.06" y1="20.5" x2="39.59" y2="15"/></svg></div>
+        <span class="g-tile-tag">Portrait — the detailer</span>
       </div>
-      <div class="media-slot reveal">
-        <div class="icon">◱</div>
-        <span class="tag">Photo — 02</span>
-      </div>
-      <div class="media-slot reveal">
-        <div class="icon">▶</div>
-        <span class="tag">Video — 01</span>
-      </div>
-      <div class="media-slot reveal">
-        <div class="icon">◱</div>
-        <span class="tag">Photo — 03</span>
-      </div>
-      <div class="media-slot reveal">
-        <div class="icon">◱</div>
-        <span class="tag">Photo — 04</span>
-      </div>
-      <div class="media-slot reveal">
-        <div class="icon">▶</div>
-        <span class="tag">Video — 02</span>
+      <div class="about-copy" data-reveal="fade">
+        <span class="eyebrow">About</span>
+        <p class="pull">Hands-on experience with the cars most detailers only see from a distance.</p>
+        <p class="body">Our detailer has spent years working directly on performance and prestige vehicles — the kind of cars their owners don't hand to just anyone. That specialism is the reason the Prestige tier exists: careful, considered work on paintwork worth protecting, from a single trusted pair of hands rather than a rotating roster.</p>
+        <div class="marque-line">
+          <span>McLaren</span>
+          <span>Porsche Cayman / 718 GT4</span>
+          <span>BMW M140i</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="checker-strip"></div>
-
-<footer>
+<section class="section-pad on-paper-deep">
   <div class="wrap">
-    <div class="wordmark">The Detail Collective</div>
-    <p class="tagline">Mobile car detailing across the South West. We come to you, home or work.</p>
-    <a href="#" class="btn btn-book"><span>Book a slot</span></a>
-    <div class="foot-bottom">
-      <span class="region">South West England</span>
+    <div class="stories" data-reveal="fade">
+      <span class="mark" aria-hidden="true">&ldquo;</span>
+      <p class="line">Every detail earns its own story.</p>
+      <p class="note">We're just getting started — client stories will appear here as early jobs are completed.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section on-ink">
+  <div class="wrap">
+    <span class="eyebrow on-dark" data-reveal="fade">Book a slot</span>
+    <h2 data-reveal="fade">Ready for that showroom finish?</h2>
+    <p class="lede" data-reveal="fade">Tell us where and when — we'll bring the full detailing kit to your home or workplace anywhere across the South West.</p>
+    <div class="hero-cta" data-reveal="fade">
+      <a href="#" class="btn btn-primary btn-on-dark btn-book">Book a slot</a>
+      <a href="#services" class="link-underline">See pricing</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="wordmark">The Detail Collective</div>
+        <p class="footer-tagline">Mobile car detailing across the South West. We come to you, home or work.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Sitemap</h4>
+          <ul>
+            <li><a href="#work">The work</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#about">About</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Book</h4>
+          <ul>
+            <li><a href="#" class="btn-book">Book a slot</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>South West England — Bradford on Avon, Bath, Trowbridge &amp; beyond</span>
+      <span>© <span id="year"></span> The Detail Collective</span>
     </div>
   </div>
 </footer>
 
-<script>
-  (function () {
-    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var targets = document.querySelectorAll('.reveal');
-
-    if (prefersReduced || !('IntersectionObserver' in window)) {
-      targets.forEach(function (el) { el.classList.add('in-view'); });
-      return;
-    }
-
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
-    targets.forEach(function (el) { observer.observe(el); });
-  })();
-</script>
-
+<script src="vendor/gsap/gsap.min.js"></script>
+<script src="vendor/gsap/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis/lenis.min.js"></script>
+<script type="module" src="assets/main.js"></script>
 </body>
 </html>
