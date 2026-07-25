@@ -286,34 +286,55 @@ async function initHeroScene() {
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.02).texture;
 
-  const geometry = new THREE.SphereGeometry(1.55, 160, 160);
+  // A stylized, abstract sports-car silhouette — not a copy of any real
+  // model (avoids trademarked bodywork) — sculpted from a unit sphere:
+  // sloped hood and decklid, a cabin greenhouse bump, flared haunches
+  // over the wheel arches, a flat underbody, and a subtle rear kick.
+  const geometry = new THREE.SphereGeometry(1, 200, 200);
   const posAttr = geometry.attributes.position;
   const v = new THREE.Vector3();
-  const n = new THREE.Vector3();
+  const smoothstep = (edge0, edge1, x) => {
+    const t = Math.min(Math.max((x - edge0) / (edge1 - edge0), 0), 1);
+    return t * t * (3 - 2 * t);
+  };
+  const bell = (x, center, width) => Math.exp(-Math.pow((x - center) / width, 2));
+
   for (let i = 0; i < posAttr.count; i++) {
     v.fromBufferAttribute(posAttr, i);
-    n.copy(v).normalize();
-    const noise =
-      Math.sin(n.x * 3.1 + 1.7) * 0.11 +
-      Math.sin(n.y * 2.3 - 0.6) * 0.13 +
-      Math.sin(n.z * 2.7 + 3.2) * 0.1 +
-      Math.sin((n.x + n.y) * 4.1) * 0.05;
-    v.addScaledVector(n, noise);
-    posAttr.setXYZ(i, v.x, v.y, v.z);
+    const t = v.z; // -1 nose … +1 tail (rotation axis, like a turntable)
+
+    let x = v.x;
+    let y = v.y;
+
+    if (y > 0) {
+      const roofline = 0.32 + 0.5 * bell(t, -0.05, 0.5);
+      const tailKick = 0.14 * bell(t, 0.82, 0.13);
+      y = y * roofline + tailKick;
+    } else {
+      y = y * 0.2; // flat, ground-hugging underbody
+    }
+
+    const haunch = 1 + 0.12 * (bell(t, -0.48, 0.22) + bell(t, 0.48, 0.22));
+    const noseTaper = 0.55 + 0.45 * smoothstep(-1, -0.55, t);
+    x = x * haunch * noseTaper;
+
+    posAttr.setXYZ(i, x, y, v.z);
   }
   geometry.computeVertexNormals();
+  geometry.scale(1.35, 1.35, 2.55);
 
   const material = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color('#25392f'),
+    color: new THREE.Color('#1c2b23'),
     metalness: 1,
-    roughness: 0.16,
+    roughness: 0.14,
     clearcoat: 1,
-    clearcoatRoughness: 0.12,
-    envMapIntensity: 1.3,
+    clearcoatRoughness: 0.1,
+    envMapIntensity: 1.35,
   });
 
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.set(1.15, -0.1, 0);
+  mesh.position.set(1.15, -0.15, 0);
+  mesh.rotation.z = -0.06;
   scene.add(mesh);
 
   const key = new THREE.DirectionalLight(0xfff4e0, 1.4);
@@ -364,8 +385,11 @@ async function initHeroScene() {
     pointerCurrent.x += (pointerTarget.x - pointerCurrent.x) * 0.04;
     pointerCurrent.y += (pointerTarget.y - pointerCurrent.y) * 0.04;
 
-    mesh.rotation.y = t * 0.09 + pointerCurrent.x * 0.25;
-    mesh.rotation.x = Math.sin(t * 0.12) * 0.12 + pointerCurrent.y * 0.15;
+    // A flattering 3/4 angle by default, easing back and forth like a
+    // turntable rather than spinning all the way round.
+    const baseYaw = 0.6;
+    mesh.rotation.y = baseYaw + Math.sin(t * 0.15) * 0.16 + pointerCurrent.x * 0.22;
+    mesh.rotation.x = Math.sin(t * 0.12) * 0.05 + pointerCurrent.y * 0.08;
 
     renderer.render(scene, camera);
   }
