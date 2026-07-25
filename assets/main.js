@@ -307,16 +307,30 @@ async function initHeroScene() {
     let y = v.y;
 
     if (y > 0) {
-      const roofline = 0.32 + 0.5 * bell(t, -0.05, 0.5);
-      const tailKick = 0.14 * bell(t, 0.82, 0.13);
-      y = y * roofline + tailKick;
+      // An asymmetric hump: steep/narrow rise from a low nose into the
+      // cabin (short, aggressive hood-to-windshield), then a much wider,
+      // gentler taper down the fastback rear — long hood, short deck.
+      const peakT = -0.15;
+      const front = bell(t, peakT, 0.24);
+      const rear = bell(t, peakT, 0.58);
+      const humpShape = t < peakT ? front : rear;
+
+      const baseLevel = 0.2;
+      const roofLevel = 0.82;
+      const profile = baseLevel + (roofLevel - baseLevel) * humpShape;
+
+      const tailKick = 0.09 * bell(t, 0.8, 0.08);
+      y = y * profile + tailKick;
     } else {
       y = y * 0.2; // flat, ground-hugging underbody
     }
 
-    const haunch = 1 + 0.12 * (bell(t, -0.48, 0.22) + bell(t, 0.48, 0.22));
-    const noseTaper = 0.55 + 0.45 * smoothstep(-1, -0.55, t);
-    x = x * haunch * noseTaper;
+    // Pointed nose, a tucked-in greenhouse waist, and haunches flared
+    // wider over the rear than the front — a mid-engine supercar stance.
+    const noseTaper = 0.5 + 0.5 * smoothstep(-1, -0.5, t);
+    const haunch = 1 + 0.24 * bell(t, 0.55, 0.22) + 0.08 * bell(t, -0.45, 0.18);
+    const waist = 1 - 0.22 * bell(t, 0.1, 0.35) * smoothstep(0.1, 0.6, v.y);
+    x = x * noseTaper * haunch * waist;
 
     posAttr.setXYZ(i, x, y, v.z);
   }
