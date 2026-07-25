@@ -682,29 +682,43 @@ section { position: relative; }
    Client stories
    ============================================================ */
 
-.stories {
-  text-align: center;
-  max-width: 680px;
-  margin: 0 auto;
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 2.4vw, 32px);
 }
-.stories .mark {
+
+.story-card {
+  padding: clamp(30px, 2.6vw, 40px) clamp(26px, 2.2vw, 34px);
+  background: var(--paper);
+  border: 1px solid var(--stone-line);
+}
+
+.story-card .mark {
   font-family: var(--font-display);
-  font-size: 64px;
+  font-size: 40px;
   color: var(--accent-soft);
   line-height: 1;
   font-style: italic;
 }
-.stories .line {
-  margin-top: 18px;
+
+.story-card .quote {
+  margin-top: 14px;
   font-family: var(--font-display);
   font-style: italic;
-  font-size: clamp(24px, 3vw, 34px);
+  font-size: 19px;
   color: var(--ink);
-  line-height: 1.4;
+  line-height: 1.45;
 }
-.stories .note {
+
+.story-card .story-tag {
+  display: block;
   margin-top: 22px;
-  font-size: 14px;
+  padding-top: 18px;
+  border-top: 1px solid var(--stone-line);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--ink-soft);
 }
 
@@ -826,6 +840,7 @@ footer.site-footer {
 
 @media (max-width: 860px) {
   .service-grid { grid-template-columns: 1fr; }
+  .stories-grid { grid-template-columns: 1fr; }
   .g-tile.span-7, .g-tile.span-5, .g-tile.span-8, .g-tile.span-4 { grid-column: span 12; }
   .footer-top { flex-direction: column; }
 }

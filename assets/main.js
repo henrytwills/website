@@ -193,26 +193,37 @@ document.querySelectorAll('.g-tile, .about-portrait').forEach((tile) => {
 });
 
 /* ---------------------------------------------------------------
-   Pinned moment: the "client stories" quote grows in as it holds
+   Pinned moment: the section holds while the story cards assemble
    --------------------------------------------------------------- */
 
-const storiesBlock = document.querySelector('.stories');
-if (storiesBlock && !prefersReduced) {
+const storiesSection = document.getElementById('stories');
+const storyCards = storiesSection ? gsap.utils.toArray('.story-card', storiesSection) : [];
+
+if (storiesSection && storyCards.length && !prefersReduced) {
   ScrollTrigger.matchMedia({
     '(min-width: 861px)': () => {
-      const mark = storiesBlock.querySelector('.mark');
-      gsap.set(mark, { scale: 0.4, transformOrigin: '50% 100%' });
-      gsap.to(mark, {
-        scale: 1,
+      gsap.set(storyCards, { opacity: 0, y: 40 });
+      gsap.to(storyCards, {
+        opacity: 1, y: 0,
+        stagger: 0.25,
         ease: 'none',
         scrollTrigger: {
-          trigger: storiesBlock.closest('section'),
+          trigger: storiesSection,
           start: 'top top',
-          end: '+=70%',
+          end: '+=60%',
           scrub: true,
           pin: true,
-          pinSpacing: true,
         },
+      });
+    },
+    '(max-width: 860px)': () => {
+      gsap.set(storyCards, { opacity: 0, y: 30 });
+      gsap.to(storyCards, {
+        opacity: 1, y: 0,
+        stagger: 0.15,
+        duration: 0.9,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: storiesSection, start: 'top 85%' },
       });
     },
   });
