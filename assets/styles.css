@@ -602,15 +602,6 @@ section { position: relative; }
   align-items: baseline;
   gap: 12px;
 }
-.svc-price .unit {
-  font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  font-style: normal;
-}
-
 .svc-rule { height: 1px; background: var(--stone-line); margin: 30px 0 26px; }
 
 .svc-group + .svc-group { margin-top: 26px; }
