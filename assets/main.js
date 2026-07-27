@@ -230,7 +230,7 @@ if (storiesSection && storyCards.length && !prefersReduced) {
 }
 
 /* ---------------------------------------------------------------
-   Hero parallax: copy and canvas drift at different rates
+   Hero parallax: copy and flag drift at different rates
    --------------------------------------------------------------- */
 
 if (!prefersReduced) {
@@ -242,7 +242,7 @@ if (!prefersReduced) {
         ease: 'none',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
       });
-      gsap.to('#hero-canvas', {
+      gsap.to('.hero-checker', {
         yPercent: -6,
         ease: 'none',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
@@ -258,167 +258,3 @@ if (!prefersReduced) {
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-/* ---------------------------------------------------------------
-   Three.js hero: a slowly turning, hand-displaced glossy sphere
-   standing in for real photography until real jobs are shot.
-   --------------------------------------------------------------- */
-
-async function initHeroScene() {
-  if (prefersReduced) return;
-
-  const canvas = document.getElementById('hero-canvas');
-  const wrap = document.querySelector('.hero-canvas-wrap');
-  if (!canvas || !wrap) return;
-
-  let THREE, RoomEnvironment;
-  try {
-    THREE = await import('three');
-    ({ RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js'));
-  } catch (err) {
-    return; // CSS gradient fallback already sits behind the canvas
-  }
-
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' });
-  } catch (err) {
-    return;
-  }
-
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-  camera.position.set(0, 0, 6.4);
-
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.02).texture;
-
-  // A stylized, abstract sports-car silhouette — not a copy of any real
-  // model (avoids trademarked bodywork) — sculpted from a unit sphere:
-  // sloped hood and decklid, a cabin greenhouse bump, flared haunches
-  // over the wheel arches, a flat underbody, and a subtle rear kick.
-  const geometry = new THREE.SphereGeometry(1, 200, 200);
-  const posAttr = geometry.attributes.position;
-  const v = new THREE.Vector3();
-  const smoothstep = (edge0, edge1, x) => {
-    const t = Math.min(Math.max((x - edge0) / (edge1 - edge0), 0), 1);
-    return t * t * (3 - 2 * t);
-  };
-  const bell = (x, center, width) => Math.exp(-Math.pow((x - center) / width, 2));
-
-  for (let i = 0; i < posAttr.count; i++) {
-    v.fromBufferAttribute(posAttr, i);
-    const t = v.z; // -1 nose … +1 tail (rotation axis, like a turntable)
-
-    let x = v.x;
-    let y = v.y;
-
-    if (y > 0) {
-      // An asymmetric hump: steep/narrow rise from a low nose into the
-      // cabin (short, aggressive hood-to-windshield), then a much wider,
-      // gentler taper down the fastback rear — long hood, short deck.
-      const peakT = -0.15;
-      const front = bell(t, peakT, 0.24);
-      const rear = bell(t, peakT, 0.58);
-      const humpShape = t < peakT ? front : rear;
-
-      const baseLevel = 0.2;
-      const roofLevel = 0.82;
-      const profile = baseLevel + (roofLevel - baseLevel) * humpShape;
-
-      const tailKick = 0.09 * bell(t, 0.8, 0.08);
-      y = y * profile + tailKick;
-    } else {
-      y = y * 0.2; // flat, ground-hugging underbody
-    }
-
-    // Pointed nose, a tucked-in greenhouse waist, and haunches flared
-    // wider over the rear than the front — a mid-engine supercar stance.
-    const noseTaper = 0.5 + 0.5 * smoothstep(-1, -0.5, t);
-    const haunch = 1 + 0.24 * bell(t, 0.55, 0.22) + 0.08 * bell(t, -0.45, 0.18);
-    const waist = 1 - 0.22 * bell(t, 0.1, 0.35) * smoothstep(0.1, 0.6, v.y);
-    x = x * noseTaper * haunch * waist;
-
-    posAttr.setXYZ(i, x, y, v.z);
-  }
-  geometry.computeVertexNormals();
-  geometry.scale(1.35, 1.35, 2.55);
-
-  const material = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color('#1c2b23'),
-    metalness: 1,
-    roughness: 0.14,
-    clearcoat: 1,
-    clearcoatRoughness: 0.1,
-    envMapIntensity: 1.35,
-  });
-
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.set(1.15, -0.15, 0);
-  mesh.rotation.z = -0.06;
-  scene.add(mesh);
-
-  const key = new THREE.DirectionalLight(0xfff4e0, 1.4);
-  key.position.set(3.5, 4, 5);
-  scene.add(key);
-
-  const rim = new THREE.DirectionalLight(0xbcd6c4, 0.6);
-  rim.position.set(-4, -2, 2);
-  scene.add(rim);
-
-  scene.add(new THREE.AmbientLight(0xffffff, 0.12));
-
-  function sizeToWrap() {
-    const { width, height } = wrap.getBoundingClientRect();
-    renderer.setSize(width, height, false);
-    camera.aspect = width / Math.max(height, 1);
-    camera.updateProjectionMatrix();
-  }
-  sizeToWrap();
-
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(sizeToWrap, 120);
-  });
-
-  const pointerTarget = { x: 0, y: 0 };
-  const pointerCurrent = { x: 0, y: 0 };
-  window.addEventListener('pointermove', (e) => {
-    pointerTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
-    pointerTarget.y = (e.clientY / window.innerHeight) * 2 - 1;
-  });
-
-  let running = true;
-  const io = new IntersectionObserver(([entry]) => { running = entry.isIntersecting; }, { threshold: 0.02 });
-  io.observe(wrap);
-
-  gsap.set(mesh.scale, { x: 0.001, y: 0.001, z: 0.001 });
-  gsap.to(mesh.scale, { x: 1, y: 1, z: 1, duration: 1.6, ease: 'power3.out', delay: 0.3 });
-
-  const clock = new THREE.Clock();
-
-  function animate() {
-    requestAnimationFrame(animate);
-    if (!running) return;
-
-    const t = clock.getElapsedTime();
-    pointerCurrent.x += (pointerTarget.x - pointerCurrent.x) * 0.04;
-    pointerCurrent.y += (pointerTarget.y - pointerCurrent.y) * 0.04;
-
-    // A flattering 3/4 angle by default, easing back and forth like a
-    // turntable rather than spinning all the way round.
-    const baseYaw = 0.6;
-    mesh.rotation.y = baseYaw + Math.sin(t * 0.15) * 0.16 + pointerCurrent.x * 0.22;
-    mesh.rotation.x = Math.sin(t * 0.12) * 0.05 + pointerCurrent.y * 0.08;
-
-    renderer.render(scene, camera);
-  }
-  animate();
-}
-
-initHeroScene();
