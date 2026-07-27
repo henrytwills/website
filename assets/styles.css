@@ -355,6 +355,11 @@ body.nav-open { overflow: hidden; }
     align-self: stretch;
     min-height: 420px;
     margin-top: 0;
+    /* Break out of the centered, max-width .wrap so the pattern's right
+       edge reaches the true viewport edge, not just the content column —
+       correct at any window width, including past the container's max-width. */
+    margin-right: calc(-1 * (var(--gutter) + (100vw - min(100vw, var(--container))) / 2));
+    border-right: none;
   }
 }
 
