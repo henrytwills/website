@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weston Garages Bath — MOTs, Servicing &amp; Repairs on High Street, Bath</title>
+<meta name="description" content="Independent car garage on High Street, Bath (BA1 4BX). MOT testing, full and interim servicing, engine diagnostics, brakes and clutches — every job priced before we start.">
+<meta name="theme-color" content="#0B0E13">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Weston Garages Bath — MOTs, Servicing &amp; Repairs">
+<meta property="og:description" content="Independent garage on High Street, Bath. MOTs, diagnostics and repairs, priced before we start.">
+<meta property="og:locale" content="en_GB">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='9' fill='%230B0E13'/%3E%3Crect x='5' y='16' width='38' height='16' rx='3' fill='%23FFD400'/%3E%3Crect x='5' y='16' width='9' height='16' rx='3' fill='%230B3EA8'/%3E%3Ctext x='29' y='28' font-family='monospace' font-size='12' font-weight='700' text-anchor='middle' fill='%230B0E13'%3EWG%3C/text%3E%3C/svg%3E">
+
+<!--
+  ============================================================================
+  WESTON GARAGES BATH — single-file site. No build step: Tailwind + FontAwesome
+  are loaded from CDNs, everything else is inline.
+
+  ── PLACEHOLDERS TO REPLACE BEFORE THIS GOES LIVE ──────────────────────────
+  Search the file for each string:
+
+  1. "01225 960 123"  — placeholder phone number. Appears in the header, hero,
+                        booking section, footer and the tel: links. Replace all.
+  2. "hello@westongaragesbath.co.uk"
+                      — placeholder email. Also used as the fallback recipient
+                        for the booking form (see BOOKING FORM note below).
+  3. "08:00 – 17:30"  — placeholder opening hours (hero spec card + footer).
+  4. "180+"           — placeholder Google review count in the stats bar.
+  5. "4.7"            — confirm the current average rating before publishing.
+  6. The hero spec card values (MOT classes, ramps, courtesy car, etc.) are
+     plausible defaults, not confirmed facts. Check each line.
+  7. The three testimonials are written placeholders. Swap them for real
+     reviews — with the customer's permission — or delete the section.
+
+  ── PRICING ────────────────────────────────────────────────────────────────
+  Deliberately no invented prices. Service cards show approximate bay time
+  instead. The one figure quoted, £54.85, is the DVSA statutory maximum MOT
+  fee for a class 4 car — a public, factual number. If you want "from £"
+  prices on the cards, add them to the .price slot in each card.
+
+  ── BOOKING FORM ───────────────────────────────────────────────────────────
+  There is no server here, so the form cannot POST anywhere. On submit it
+  validates, then opens the customer's email client with the details already
+  written out, and the confirmation panel says exactly that — it does not
+  claim a booking was made.
+
+  To wire up a real endpoint (Formspree, Netlify Forms, your own handler):
+  find "FORM ENDPOINT" in the <script> at the bottom and follow the note.
+  ============================================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:      '#0B0E13',
+          graphite: '#141A22',
+          steel:    '#232B36',
+          haze:     '#8D98A8',
+          paper:    '#F2F4F7',
+          signal:   '#FF5A0F',
+          plate:    '#FFD400',
+          band:     '#0B3EA8'
+        },
+        fontFamily: {
+          display: ['Archivo', 'system-ui', 'sans-serif'],
+          sans:    ['"IBM Plex Sans"', 'system-ui', 'sans-serif'],
+          mono:    ['"IBM Plex Mono"', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  /* Display face: Archivo pushed wide on its width axis, for workshop-signage
+     proportions. Used only on headings — the body face stays normal width. */
+  .display {
+    font-family: 'Archivo', system-ui, sans-serif;
+    font-variation-settings: 'wdth' 112;
+    letter-spacing: -0.022em;
+    line-height: 0.98;
+  }
+  .label {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.6875rem;
+    font-weight: 500;
+  }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { -webkit-font-smoothing: antialiased; }
+
+  /* Workshop floor grid behind the hero, faded out toward the bottom. */
+  .grid-bg {
+    background-image:
+      linear-gradient(to right,  rgba(255,255,255,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(120% 80% at 50% 0%, #000 30%, transparent 78%);
+            mask-image: radial-gradient(120% 80% at 50% 0%, #000 30%, transparent 78%);
+  }
+
+  /* The one industrial flourish on the page: a hazard rule under the hero. */
+  .hazard {
+    height: 6px;
+    background-image: repeating-linear-gradient(
+      -45deg, #FF5A0F 0 14px, #0B0E13 14px 28px
+    );
+  }
+
+  /* ── Signature element: the registration field, as a real UK plate ─────── */
+  .plate-wrap {
+    display: flex; align-items: stretch;
+    max-width: 26rem;
+    border-radius: 7px; overflow: hidden;
+    border: 2px solid #0B0E13;
+    background: #FFD400;
+    transition: box-shadow .18s ease, transform .18s ease;
+  }
+  .plate-wrap:focus-within {
+    box-shadow: 0 0 0 4px rgba(255,90,15,.38);
+    transform: translateY(-1px);
+  }
+  .plate-band {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 2px;
+    background: #0B3EA8; color: #fff;
+    padding: 0 .7rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .72rem; font-weight: 600; letter-spacing: .06em;
+  }
+  .plate-input {
+    flex: 1 1 auto; min-width: 0;
+    background: transparent; border: 0; outline: none;
+    color: #0B0E13;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: clamp(1.25rem, 5vw, 1.6rem);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: .7rem .5rem;
+  }
+  .plate-input::placeholder { color: rgba(11,14,19,.34); letter-spacing: .12em; }
+
+  /* Form controls */
+  .field {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #D3D9E2;
+    border-radius: 7px;
+    padding: .8rem .9rem;
+    font-size: .95rem;
+    color: #0B0E13;
+    transition: border-color .16s ease, box-shadow .16s ease;
+  }
+  .field::placeholder { color: #9AA4B2; }
+  .field:focus {
+    outline: none;
+    border-color: #FF5A0F;
+    box-shadow: 0 0 0 3px rgba(255,90,15,.18);
+  }
+  select.field {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%236B7686'%3E%3Cpath d='M4.2 6.2 8 10l3.8-3.8Z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right .8rem center;
+    background-size: 16px;
+    padding-right: 2.2rem;
+  }
+
+  /* Invalid fields carry a visual marker, not just the message below them. */
+  .field[aria-invalid="true"] { border-color: #C2410C; }
+  .plate-wrap:has(.plate-input[aria-invalid="true"]) {
+    box-shadow: 0 0 0 3px rgba(194,65,12,.4);
+  }
+
+  /* Visible keyboard focus everywhere, without a permanent mouse ring. */
+  a:focus-visible, button:focus-visible, summary:focus-visible {
+    outline: 3px solid #FF5A0F;
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  /* Scroll reveal */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .6s cubic-bezier(.2,.7,.3,1), transform .6s cubic-bezier(.2,.7,.3,1);
+    transition-delay: var(--d, 0ms);
+  }
+  [data-reveal].is-in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] { opacity: 1 !important; transform: none !important; transition: none; }
+    .card-lift:hover { transform: none !important; }
+  }
+
+  .card-lift { transition: transform .2s ease, border-color .2s ease, background-color .2s ease; }
+  .card-lift:hover { transform: translateY(-3px); }
+</style>
+</head>
+
+<body class="bg-ink font-sans text-white antialiased">
+
+<a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-signal focus:px-4 focus:py-2 focus:font-semibold focus:text-ink">Skip to content</a>
+
+<!-- ══ HEADER ═══════════════════════════════════════════════════════════ -->
+<header id="site-header" class="sticky top-0 z-50 border-b border-steel/80 bg-ink/85 backdrop-blur-md transition-shadow">
+  <div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-8">
+
+    <a href="#" class="flex min-w-0 items-center gap-2.5 sm:gap-3">
+      <span class="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-signal text-ink">
+        <i class="fa-solid fa-wrench text-[15px]"></i>
+      </span>
+      <span class="display min-w-0 truncate text-[15px] font-extrabold leading-none sm:text-[17px] md:text-lg">
+        Weston Garages
+        <span class="block text-[9px] font-medium tracking-[.18em] text-haze sm:text-[10px] sm:tracking-[.2em]">BATH · BA1 4BX</span>
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-7 lg:flex" aria-label="Primary">
+      <a href="#services" class="text-sm text-haze transition-colors hover:text-white">Services</a>
+      <a href="#reviews"  class="text-sm text-haze transition-colors hover:text-white">Reviews</a>
+      <a href="#find"     class="text-sm text-haze transition-colors hover:text-white">Find us</a>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      <a href="tel:+441225960123"
+         class="flex min-h-[42px] items-center gap-2 rounded-md border border-steel bg-graphite px-3 py-2 transition-colors hover:border-signal/60 sm:px-3.5">
+        <i class="fa-solid fa-phone text-[13px] text-signal"></i>
+        <span class="hidden font-mono text-sm font-medium sm:inline">01225 960 123</span>
+        <span class="sr-only sm:hidden">Call the garage</span>
+      </a>
+      <a href="#book"
+         class="flex min-h-[42px] items-center whitespace-nowrap rounded-md bg-signal px-3.5 py-2 text-sm font-semibold text-ink transition-colors hover:bg-[#ff7133] sm:px-4">
+        <span class="sm:hidden">Book</span>
+        <span class="hidden sm:inline">Book service</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ══ HERO ═════════════════════════════════════════════════════════════ -->
+<section class="relative overflow-hidden">
+  <div class="grid-bg pointer-events-none absolute inset-0"></div>
+  <div class="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-signal/[0.13] blur-[120px]"></div>
+
+  <div class="relative mx-auto grid w-full max-w-6xl grid-cols-1 gap-12 px-5 pb-20 pt-16 sm:px-8 md:pt-24 lg:grid-cols-12 lg:gap-14 lg:pb-28">
+
+    <div class="lg:col-span-7">
+      <p class="label mb-6 flex items-center gap-2.5 text-signal" data-reveal>
+        <span class="inline-block h-px w-8 bg-signal"></span>
+        Independent garage · High St, Bath
+      </p>
+
+      <h1 class="display text-[2rem] font-extrabold sm:text-[3.1rem] lg:text-[3.55rem]" data-reveal style="--d:60ms">
+        MOTs, diagnostics<br>and repairs.<br>
+        <span class="text-signal">Priced before<br>we start.</span>
+      </h1>
+
+      <p class="mt-7 max-w-xl text-[1.0625rem] leading-relaxed text-haze" data-reveal style="--d:120ms">
+        An independent workshop on High Street in Bath. We test it, we tell you what we found,
+        and you decide. Nothing gets done to your car until you've heard the price for it.
+      </p>
+
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center" data-reveal style="--d:180ms">
+        <a href="#book"
+           class="group inline-flex items-center justify-center gap-2.5 rounded-md bg-signal px-6 py-3.5 text-[15px] font-semibold text-ink transition-colors hover:bg-[#ff7133]">
+          <i class="fa-solid fa-calendar-check"></i>
+          Book Your MOT &amp; Service Now
+        </a>
+        <a href="tel:+441225960123"
+           class="inline-flex items-center justify-center gap-2.5 rounded-md border border-steel px-6 py-3.5 text-[15px] font-medium text-white transition-colors hover:border-signal/60 hover:bg-graphite">
+          <i class="fa-solid fa-phone text-signal"></i>
+          01225 960 123
+        </a>
+      </div>
+
+      <p class="mt-5 font-mono text-[12.5px] text-haze" data-reveal style="--d:220ms">
+        Someone picks up the phone Monday to Friday, 08:00 – 17:30.
+      </p>
+    </div>
+
+    <!-- Spec card: the workshop as a job sheet. -->
+    <div class="lg:col-span-5" data-reveal style="--d:260ms">
+      <div class="rounded-xl border border-steel bg-graphite/80 p-6 backdrop-blur-sm sm:p-7">
+        <div class="mb-5 flex items-baseline justify-between border-b border-steel pb-4">
+          <span class="label text-white">The workshop</span>
+          <span class="font-mono text-xs text-haze">BA1 4BX</span>
+        </div>
+
+        <dl class="space-y-3.5 font-mono text-[13.5px]">
+          <div class="flex items-baseline justify-between gap-4">
+            <dt class="text-haze">MOT classes</dt><dd class="text-right font-medium">4 &amp; 7</dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-4">
+            <dt class="text-haze">Vehicles</dt><dd class="text-right font-medium">All makes, inc. hybrid</dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-4">
+            <dt class="text-haze">Diagnostics</dt><dd class="text-right font-medium">Dealer-level equipment</dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-4">
+            <dt class="text-haze">Courtesy car</dt><dd class="text-right font-medium">On request</dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-4">
+            <dt class="text-haze">Payment</dt><dd class="text-right font-medium">Card &amp; cash</dd>
+          </div>
+        </dl>
+
+        <div class="mt-6 border-t border-steel pt-5">
+          <div class="flex items-baseline justify-between font-mono text-[13.5px]">
+            <span class="text-haze">Mon – Fri</span>
+            <span class="font-medium text-signal">08:00 – 17:30</span>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between font-mono text-[13.5px]">
+            <span class="text-haze">Sat – Sun</span>
+            <span class="font-medium">Closed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="hazard" role="presentation"></div>
+
+<!-- ══ TRUST / STATS BAR ════════════════════════════════════════════════ -->
+<section class="border-b border-steel bg-graphite" aria-label="Why choose us">
+  <div class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-px overflow-hidden px-5 sm:grid-cols-2 sm:px-8 lg:grid-cols-4">
+
+    <div class="py-8 sm:pr-8 lg:py-10" data-reveal>
+      <div class="mb-2 flex items-center gap-2">
+        <span class="display text-3xl font-extrabold">4.7</span>
+        <span class="text-signal" aria-hidden="true">
+          <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star-half-stroke text-xs"></i>
+        </span>
+      </div>
+      <p class="label mb-1.5 text-white">Star rating</p>
+      <p class="text-sm leading-relaxed text-haze">Averaged across 180+ Google reviews from Bath drivers.</p>
+    </div>
+
+    <div class="border-t border-steel py-8 sm:border-l sm:border-t-0 sm:pl-8 lg:py-10" data-reveal style="--d:80ms">
+      <div class="mb-2 text-signal"><i class="fa-solid fa-screwdriver-wrench text-2xl"></i></div>
+      <p class="label mb-1.5 text-white">Independent specialists</p>
+      <p class="text-sm leading-relaxed text-haze">All makes and models, main-dealer equipment, no franchise targets.</p>
+    </div>
+
+    <div class="border-t border-steel py-8 sm:pr-8 lg:border-l lg:border-t-0 lg:pl-8 lg:py-10" data-reveal style="--d:160ms">
+      <div class="mb-2 text-signal"><i class="fa-solid fa-receipt text-2xl"></i></div>
+      <p class="label mb-1.5 text-white">Transparent pricing</p>
+      <p class="text-sm leading-relaxed text-haze">You get the figure before we start. Nothing extra appears on the bill.</p>
+    </div>
+
+    <div class="border-t border-steel py-8 sm:border-l sm:pl-8 lg:border-t-0 lg:py-10" data-reveal style="--d:240ms">
+      <div class="mb-2 text-signal"><i class="fa-solid fa-clipboard-check text-2xl"></i></div>
+      <p class="label mb-1.5 text-white">Class 4 &amp; 7 testing</p>
+      <p class="text-sm leading-relaxed text-haze">Cars and light commercials tested on site, retest included.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ SERVICES ═════════════════════════════════════════════════════════ -->
+<section id="services" class="bg-paper py-20 text-ink md:py-28">
+  <div class="mx-auto w-full max-w-6xl px-5 sm:px-8">
+
+    <div class="mb-12 max-w-2xl md:mb-16">
+      <p class="label mb-4 text-signal" data-reveal>What we do</p>
+      <h2 class="display text-[1.95rem] font-extrabold sm:text-[2.55rem] lg:text-[2.85rem]" data-reveal style="--d:60ms">
+        Everything your car needs,<br>under one roof.
+      </h2>
+      <p class="mt-5 text-[1.0625rem] leading-relaxed text-[#4A5462]" data-reveal style="--d:120ms">
+        Bay times below are typical, not promises — we confirm the real one when you book.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+      <!-- MOT -->
+      <article class="card-lift group flex flex-col rounded-xl border border-[#DCE1E9] bg-white p-7 hover:border-signal/50" data-reveal>
+        <div class="mb-5 grid h-11 w-11 place-items-center rounded-lg bg-ink text-signal transition-colors group-hover:bg-signal group-hover:text-ink">
+          <i class="fa-solid fa-clipboard-check text-lg"></i>
+        </div>
+        <h3 class="display mb-2.5 text-xl font-bold">MOT testing</h3>
+        <p class="mb-6 text-[15px] leading-relaxed text-[#4A5462]">
+          Class 4 and 7 tests in our own bay. If it fails we show you exactly what failed and what it takes to put right — no obligation to have the work done here.
+        </p>
+        <p class="price mt-auto font-mono text-[12.5px] text-[#6B7686]">
+          <i class="fa-regular fa-clock mr-1.5"></i>Approx. 45 – 60 min
+        </p>
+      </article>
+
+      <!-- Servicing -->
+      <article class="card-lift group flex flex-col rounded-xl border border-[#DCE1E9] bg-white p-7 hover:border-signal/50" data-reveal style="--d:70ms">
+        <div class="mb-5 grid h-11 w-11 place-items-center rounded-lg bg-ink text-signal transition-colors group-hover:bg-signal group-hover:text-ink">
+          <i class="fa-solid fa-oil-can text-lg"></i>
+        </div>
+        <h3 class="display mb-2.5 text-xl font-bold">Full &amp; interim servicing</h3>
+        <p class="mb-6 text-[15px] leading-relaxed text-[#4A5462]">
+          Interim at six months, full at twelve. Manufacturer-schedule parts and oils, stamped service book, and your warranty stays intact.
+        </p>
+        <p class="price mt-auto font-mono text-[12.5px] text-[#6B7686]">
+          <i class="fa-regular fa-clock mr-1.5"></i>Interim 1½ hrs · Full half a day
+        </p>
+      </article>
+
+      <!-- Diagnostics -->
+      <article class="card-lift group flex flex-col rounded-xl border border-[#DCE1E9] bg-white p-7 hover:border-signal/50" data-reveal style="--d:140ms">
+        <div class="mb-5 grid h-11 w-11 place-items-center rounded-lg bg-ink text-signal transition-colors group-hover:bg-signal group-hover:text-ink">
+          <i class="fa-solid fa-gauge-high text-lg"></i>
+        </div>
+        <h3 class="display mb-2.5 text-xl font-bold">Engine diagnostics</h3>
+        <p class="mb-6 text-[15px] leading-relaxed text-[#4A5462]">
+          Warning light on, running rough, or a noise you can't place. We read the fault codes, then actually test the circuit before condemning a part.
+        </p>
+        <p class="price mt-auto font-mono text-[12.5px] text-[#6B7686]">
+          <i class="fa-regular fa-clock mr-1.5"></i>First hour diagnostic
+        </p>
+      </article>
+
+      <!-- Brakes -->
+      <article class="card-lift group flex flex-col rounded-xl border border-[#DCE1E9] bg-white p-7 hover:border-signal/50" data-reveal style="--d:210ms">
+        <div class="mb-5 grid h-11 w-11 place-items-center rounded-lg bg-ink text-signal transition-colors group-hover:bg-signal group-hover:text-ink">
+          <i class="fa-solid fa-compact-disc text-lg"></i>
+        </div>
+        <h3 class="display mb-2.5 text-xl font-bold">Brake repairs</h3>
+        <p class="mb-6 text-[15px] leading-relaxed text-[#4A5462]">
+          Pads, discs, calipers, lines and handbrakes. We measure what's left on the discs and tell you the honest answer — including when they'll last another year.
+        </p>
+        <p class="price mt-auto font-mono text-[12.5px] text-[#6B7686]">
+          <i class="fa-regular fa-clock mr-1.5"></i>Most axles same day
+        </p>
+      </article>
+
+      <!-- Clutch -->
+      <article class="card-lift group flex flex-col rounded-xl border border-[#DCE1E9] bg-white p-7 hover:border-signal/50" data-reveal style="--d:280ms">
+        <div class="mb-5 grid h-11 w-11 place-items-center rounded-lg bg-ink text-signal transition-colors group-hover:bg-signal group-hover:text-ink">
+          <i class="fa-solid fa-gears text-lg"></i>
+        </div>
+        <h3 class="display mb-2.5 text-xl font-bold">Clutch replacements</h3>
+        <p class="mb-6 text-[15px] leading-relaxed text-[#4A5462]">
+          Slipping, juddering or a pedal that's gone soft. Full clutch kits fitted, dual-mass flywheels checked while the gearbox is out rather than after.
+        </p>
+        <p class="price mt-auto font-mono text-[12.5px] text-[#6B7686]">
+          <i class="fa-regular fa-clock mr-1.5"></i>Usually 1 – 2 days
+        </p>
+      </article>
+
+      <!-- Catch-all → funnels into the form -->
+      <article class="card-lift group flex flex-col justify-between rounded-xl border border-ink bg-ink p-7" data-reveal style="--d:350ms">
+        <div>
+          <div class="mb-5 grid h-11 w-11 place-items-center rounded-lg bg-signal text-ink">
+            <i class="fa-solid fa-wrench text-lg"></i>
+          </div>
+          <h3 class="display mb-2.5 text-xl font-bold text-white">Something else?</h3>
+          <p class="mb-6 text-[15px] leading-relaxed text-haze">
+            Cambelts, suspension, exhausts, batteries, air-con regas, welding for the MOT. If you can describe the noise, we can usually name it.
+          </p>
+        </div>
+        <a href="#book" class="-my-2 inline-flex min-h-[40px] items-center gap-2 py-2 font-mono text-[13px] font-medium text-signal transition-transform hover:translate-x-0.5">
+          Tell us what it's doing <i class="fa-solid fa-arrow-right text-[11px]"></i>
+        </a>
+      </article>
+
+    </div>
+
+    <p class="mt-8 border-l-2 border-signal bg-white/60 py-3 pl-4 text-[14px] leading-relaxed text-[#4A5462]" data-reveal>
+      <strong class="font-semibold text-ink">On MOT prices:</strong>
+      the maximum fee for a class 4 car is set by the DVSA at £54.85. We don't charge above it, and the retest is free if you leave the car with us.
+    </p>
+
+  </div>
+</section>
+
+<!-- ══ BOOKING FORM ═════════════════════════════════════════════════════ -->
+<section id="book" class="border-t border-[#DCE1E9] bg-[#E7EBF1] py-20 text-ink md:py-28">
+  <div class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-12 px-5 sm:px-8 lg:grid-cols-12 lg:gap-16">
+
+    <div class="lg:col-span-5">
+      <p class="label mb-4 text-signal" data-reveal>Book a slot</p>
+      <h2 class="display text-[1.95rem] font-extrabold sm:text-[2.3rem] lg:text-[2.5rem]" data-reveal style="--d:60ms">
+        Send us the reg.<br>We'll do the rest.
+      </h2>
+      <p class="mt-5 text-[1.0625rem] leading-relaxed text-[#4A5462]" data-reveal style="--d:120ms">
+        No deposits, no account to make. Four details and we'll come back to you with a time and a price.
+      </p>
+
+      <!-- A genuine sequence, so the numbering is carrying information. -->
+      <ol class="mt-10 space-y-6" data-reveal style="--d:180ms">
+        <li class="flex gap-4">
+          <span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-ink font-mono text-[11px] font-semibold text-signal">01</span>
+          <div>
+            <p class="font-semibold">You send the details</p>
+            <p class="mt-1 text-[14.5px] leading-relaxed text-[#4A5462]">Name, number, registration and what you think it needs.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-ink font-mono text-[11px] font-semibold text-signal">02</span>
+          <div>
+            <p class="font-semibold">We call you back</p>
+            <p class="mt-1 text-[14.5px] leading-relaxed text-[#4A5462]">Same working day, with a slot and a price for the work you've asked for.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-ink font-mono text-[11px] font-semibold text-signal">03</span>
+          <div>
+            <p class="font-semibold">You drop the car in</p>
+            <p class="mt-1 text-[14.5px] leading-relaxed text-[#4A5462]">High Street, Bath. If we find anything else, you hear about it before we touch it.</p>
+          </div>
+        </li>
+      </ol>
+
+      <p class="mt-10 flex items-center gap-2.5 font-mono text-[13px] text-[#4A5462]" data-reveal style="--d:240ms">
+        <i class="fa-solid fa-phone text-signal"></i>
+        Rather talk? <a href="tel:+441225960123" class="font-medium text-ink underline decoration-signal decoration-2 underline-offset-4">01225 960 123</a>
+      </p>
+    </div>
+
+    <div class="lg:col-span-7">
+      <div class="rounded-2xl border border-[#D3D9E2] bg-white p-6 shadow-[0_1px_3px_rgba(11,14,19,.06)] sm:p-9" data-reveal style="--d:120ms">
+
+        <form id="booking-form" novalidate>
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+            <div>
+              <label for="name" class="label mb-2 block text-[#4A5462]">Your name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required
+                     class="field" placeholder="Sam Whitfield">
+              <p class="err mt-1.5 hidden font-mono text-[12px] text-[#C2410C]" role="alert"></p>
+            </div>
+
+            <div>
+              <label for="phone" class="label mb-2 block text-[#4A5462]">Phone number</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" required
+                     class="field" placeholder="07700 900123">
+              <p class="err mt-1.5 hidden font-mono text-[12px] text-[#C2410C]" role="alert"></p>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="reg" class="label mb-2 block text-[#4A5462]">Car registration</label>
+              <div class="plate-wrap">
+                <span class="plate-band" aria-hidden="true">UK</span>
+                <input id="reg" name="reg" type="text" required
+                       class="plate-input" placeholder="BA25 XYZ"
+                       autocomplete="off" autocapitalize="characters" spellcheck="false"
+                       aria-describedby="reg-help">
+              </div>
+              <p id="reg-help" class="mt-2 font-mono text-[12px] text-[#6B7686]">
+                It's how we pull up your car's history and MOT record before you arrive.
+              </p>
+              <p class="err mt-1.5 hidden font-mono text-[12px] text-[#C2410C]" role="alert"></p>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="service" class="label mb-2 block text-[#4A5462]">What does it need?</label>
+              <select id="service" name="service" required class="field">
+                <option value="" selected disabled>Choose a service</option>
+                <option>MOT test</option>
+                <option>MOT + full service</option>
+                <option>Full service</option>
+                <option>Interim service</option>
+                <option>Engine diagnostics</option>
+                <option>Brake repairs</option>
+                <option>Clutch replacement</option>
+                <option>Something else — I'll explain below</option>
+              </select>
+              <p class="err mt-1.5 hidden font-mono text-[12px] text-[#C2410C]" role="alert"></p>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="notes" class="label mb-2 block text-[#4A5462]">
+                Anything we should know <span class="normal-case tracking-normal text-[#9AA4B2]">(optional)</span>
+              </label>
+              <textarea id="notes" name="notes" rows="3" class="field resize-y"
+                        placeholder="Grinding from the front when I brake, worse when it's cold."></textarea>
+            </div>
+
+          </div>
+
+          <button type="submit"
+                  class="mt-7 flex w-full items-center justify-center gap-2.5 rounded-md bg-signal px-6 py-4 text-[15px] font-semibold text-ink transition-colors hover:bg-[#ff7133]">
+            <i class="fa-solid fa-paper-plane"></i>
+            Request Appointment
+          </button>
+
+          <p class="mt-4 text-center font-mono text-[12px] leading-relaxed text-[#6B7686]">
+            We only use these details to arrange your booking.
+          </p>
+        </form>
+
+        <!-- Shown after a valid submit. Says what actually happened. -->
+        <div id="booking-done" class="hidden text-center" role="status" aria-live="polite">
+          <div class="mx-auto mb-5 grid h-14 w-14 place-items-center rounded-full bg-signal text-ink">
+            <i class="fa-solid fa-envelope-open-text text-xl"></i>
+          </div>
+          <h3 class="display text-2xl font-bold">Your email should be open</h3>
+          <p class="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[#4A5462]">
+            We've written the details out for you — send that email and we'll ring you back the same working day.
+            If nothing opened, the quickest route is the phone.
+          </p>
+          <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+            <a href="tel:+441225960123"
+               class="inline-flex items-center justify-center gap-2.5 rounded-md bg-ink px-5 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-graphite">
+              <i class="fa-solid fa-phone text-signal"></i> 01225 960 123
+            </a>
+            <button type="button" id="booking-reset"
+                    class="inline-flex items-center justify-center gap-2.5 rounded-md border border-[#D3D9E2] px-5 py-3 text-[15px] font-medium text-ink transition-colors hover:border-signal/60">
+              <i class="fa-solid fa-rotate-left text-[13px]"></i> Start again
+            </button>
+          </div>
+          <p id="booking-summary" class="mx-auto mt-7 max-w-md rounded-lg bg-[#F2F4F7] p-4 text-left font-mono text-[12.5px] leading-relaxed text-[#4A5462]"></p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ TESTIMONIALS ═════════════════════════════════════════════════════ -->
+<section id="reviews" class="bg-ink py-20 md:py-28">
+  <div class="mx-auto w-full max-w-6xl px-5 sm:px-8">
+
+    <div class="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
+      <div class="max-w-xl">
+        <p class="label mb-4 text-signal" data-reveal>From Bath drivers</p>
+        <h2 class="display text-[1.95rem] font-extrabold sm:text-[2.55rem] lg:text-[2.85rem]" data-reveal style="--d:60ms">
+          The reviews do<br>the talking.
+        </h2>
+      </div>
+      <div class="flex items-center gap-3 rounded-lg border border-steel bg-graphite px-5 py-4" data-reveal style="--d:120ms">
+        <span class="display text-4xl font-extrabold">4.7</span>
+        <div>
+          <div class="text-signal" aria-hidden="true">
+            <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star-half-stroke text-xs"></i>
+          </div>
+          <p class="mt-1 font-mono text-[11.5px] text-haze">180+ Google reviews</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+
+      <figure class="card-lift rounded-xl border border-steel bg-graphite p-7 hover:border-signal/40" data-reveal>
+        <div class="mb-5 text-signal" aria-label="5 out of 5 stars">
+          <i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i>
+        </div>
+        <blockquote class="text-[15.5px] leading-relaxed text-white">
+          “Booked in for an MOT and they found a split CV boot. Rang me first, told me what it'd cost, car was done by four. No drama and no lecture about five other things.”
+        </blockquote>
+        <figcaption class="mt-6 border-t border-steel pt-5 font-mono text-[12.5px]">
+          <span class="font-medium text-white">Rachel M.</span>
+          <span class="text-haze"> · Larkhall</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card-lift rounded-xl border border-steel bg-graphite p-7 hover:border-signal/40" data-reveal style="--d:90ms">
+        <div class="mb-5 text-signal" aria-label="5 out of 5 stars">
+          <i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i>
+        </div>
+        <blockquote class="text-[15.5px] leading-relaxed text-white">
+          “Engine light two other places couldn't pin down. They put it on the diagnostics, traced it to one duff sensor, and charged me for the hour it took to find. That's it.”
+        </blockquote>
+        <figcaption class="mt-6 border-t border-steel pt-5 font-mono text-[12.5px]">
+          <span class="font-medium text-white">Tom B.</span>
+          <span class="text-haze"> · Combe Down</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card-lift rounded-xl border border-steel bg-graphite p-7 hover:border-signal/40" data-reveal style="--d:180ms">
+        <div class="mb-5 text-signal" aria-label="5 out of 5 stars">
+          <i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i><i class="fa-solid fa-star text-[13px]"></i>
+        </div>
+        <blockquote class="text-[15.5px] leading-relaxed text-white">
+          “Clutch went on the way into town. They squeezed the car in the same week, talked me through the flywheel while it was apart, and it drives better than it has in years.”
+        </blockquote>
+        <figcaption class="mt-6 border-t border-steel pt-5 font-mono text-[12.5px]">
+          <span class="font-medium text-white">Priya N.</span>
+          <span class="text-haze"> · Weston</span>
+        </figcaption>
+      </figure>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ FOOTER ═══════════════════════════════════════════════════════════ -->
+<footer id="find" class="border-t border-steel bg-graphite">
+  <div class="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 md:py-20">
+
+    <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
+
+      <div class="lg:col-span-1">
+        <div class="mb-5 flex items-center gap-3">
+          <span class="grid h-9 w-9 place-items-center rounded-md bg-signal text-ink">
+            <i class="fa-solid fa-wrench text-[15px]"></i>
+          </span>
+          <span class="display text-lg font-extrabold leading-none">Weston Garages</span>
+        </div>
+        <p class="text-[14.5px] leading-relaxed text-haze">
+          An independent car garage on High Street in Bath. MOTs, servicing, diagnostics and repairs for all makes.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="label mb-5 text-white">Where we are</h3>
+        <address class="not-italic font-mono text-[13.5px] leading-relaxed text-haze">
+          1–2 High St<br>
+          Bath<br>
+          BA1 4BX
+        </address>
+        <a href="https://www.google.com/maps/search/?api=1&query=1-2+High+St+Bath+BA1+4BX"
+           target="_blank" rel="noopener noreferrer"
+           class="mt-2 inline-flex min-h-[40px] items-center gap-2 py-2 font-mono text-[13px] text-signal transition-transform hover:translate-x-0.5">
+          Get directions <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+        </a>
+      </div>
+
+      <div>
+        <h3 class="label mb-5 text-white">When we're open</h3>
+        <dl class="font-mono text-[13.5px]">
+          <div class="flex items-baseline justify-between gap-4 border-b border-steel py-2">
+            <dt class="text-haze">Mon – Fri</dt><dd class="font-medium text-white">08:00 – 17:30</dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-4 border-b border-steel py-2">
+            <dt class="text-haze">Saturday</dt><dd class="text-haze">Closed</dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-4 py-2">
+            <dt class="text-haze">Sunday</dt><dd class="text-haze">Closed</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div>
+        <h3 class="label mb-5 text-white">Get in touch</h3>
+        <a href="tel:+441225960123" class="flex min-h-[40px] items-center gap-2.5 font-mono text-[15px] font-medium text-white transition-colors hover:text-signal">
+          <i class="fa-solid fa-phone text-[13px] text-signal"></i> 01225 960 123
+        </a>
+        <a href="mailto:hello@westongaragesbath.co.uk" class="flex min-h-[40px] items-center gap-2.5 break-words font-mono text-[12.5px] text-haze transition-colors hover:text-white">
+          <i class="fa-solid fa-envelope text-[13px] text-signal"></i> hello@westongaragesbath.co.uk
+        </a>
+        <a href="#book" class="mt-5 inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-signal px-5 py-3 text-[14px] font-semibold text-ink transition-colors hover:bg-[#ff7133]">
+          <i class="fa-solid fa-calendar-check text-[13px]"></i> Book a slot
+        </a>
+      </div>
+
+    </div>
+
+    <div class="mt-14 flex flex-col gap-3 border-t border-steel pt-7 sm:flex-row sm:items-center sm:justify-between">
+      <p class="font-mono text-[12px] text-haze">© <span id="year">2026</span> Weston Garages Bath. All rights reserved.</p>
+      <p class="font-mono text-[12px] text-haze">DVSA-approved MOT testing station · Class 4 &amp; 7</p>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* Copyright year */
+  var yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  /* Scroll reveal — skipped entirely when reduced motion is requested */
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var revealables = document.querySelectorAll('[data-reveal]');
+
+  if (reduced || !('IntersectionObserver' in window)) {
+    revealables.forEach(function (el) { el.classList.add('is-in'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    revealables.forEach(function (el) { io.observe(el); });
+  }
+
+  /* Header gains a shadow once the page moves */
+  var header = document.getElementById('site-header');
+  var onScroll = function () {
+    header.classList.toggle('shadow-[0_8px_30px_rgba(0,0,0,.45)]', window.scrollY > 8);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* Registration field: keep it looking like a plate as it's typed */
+  var reg = document.getElementById('reg');
+  if (reg) {
+    reg.addEventListener('input', function () {
+      var typed = reg.value.toUpperCase().replace(/[^A-Z0-9 ]/g, '').replace(/\s+/g, ' ');
+      var bare  = typed.replace(/ /g, '').slice(0, 7);
+      /* Current-style plates always split 4 + 3 (BA25 XYZ), so space them for
+         the driver. Older and Northern Irish plates group differently, so
+         those keep whatever spacing was typed. */
+      reg.value = /^[A-Z]{2}[0-9]{2}[A-Z]{1,3}$/.test(bare)
+        ? bare.slice(0, 4) + ' ' + bare.slice(4)
+        : typed.replace(/^ /, '').slice(0, 8);
+    });
+  }
+
+  /* ── Booking form ──────────────────────────────────────────────────────
+     FORM ENDPOINT
+     There is no server behind this page, so a valid submit opens the
+     customer's email client with everything filled in. To post to a real
+     endpoint instead (Formspree, Netlify Forms, your own handler):
+
+       1. Put action="https://your-endpoint" method="POST" on <form>.
+       2. Delete the buildMailto()/window.location.assign lines below and
+          let the form submit normally, or fetch() to the endpoint here.
+       3. Reword #booking-done — it currently describes the email behaviour.
+     ------------------------------------------------------------------- */
+  var form    = document.getElementById('booking-form');
+  var done    = document.getElementById('booking-done');
+  var summary = document.getElementById('booking-summary');
+  var resetBtn = document.getElementById('booking-reset');
+  var INBOX = 'hello@westongaragesbath.co.uk';
+
+  /* Climb to the nearest ancestor holding this field's error slot. The
+     registration input is wrapped in .plate-wrap, so its slot is further up
+     than the other fields'. */
+  function errorSlot(input) {
+    var node = input.parentElement;
+    while (node) {
+      var slot = node.querySelector('.err');
+      if (slot) return slot;
+      node = node.parentElement;
+    }
+    return null;
+  }
+
+  function setError(input, message) {
+    var slot = errorSlot(input);
+    if (slot) {
+      slot.textContent = message || '';
+      slot.classList.toggle('hidden', !message);
+    }
+    input.setAttribute('aria-invalid', message ? 'true' : 'false');
+  }
+
+  function validate() {
+    var problems = [];
+    var name    = document.getElementById('name');
+    var phone   = document.getElementById('phone');
+    var service = document.getElementById('service');
+
+    setError(name, ''); setError(phone, ''); setError(reg, ''); setError(service, '');
+
+    if (!name.value.trim()) {
+      setError(name, 'We need a name to put the booking under.');
+      problems.push(name);
+    }
+    /* Deliberately loose: UK numbers come in many shapes, and rejecting a
+       real customer's number is worse than accepting an odd one. */
+    if (phone.value.replace(/[^0-9]/g, '').length < 10) {
+      setError(phone, 'A number we can call you back on, please.');
+      problems.push(phone);
+    }
+    if (reg.value.replace(/[^A-Z0-9]/gi, '').length < 2) {
+      setError(reg, "Your car's registration, as it appears on the plate.");
+      problems.push(reg);
+    }
+    if (!service.value) {
+      setError(service, 'Pick the closest match — we can adjust it on the phone.');
+      problems.push(service);
+    }
+    return problems;
+  }
+
+  function buildMailto(data) {
+    var subject = 'Appointment request — ' + data.reg + ' — ' + data.service;
+    var lines = [
+      'Name:         ' + data.name,
+      'Phone:        ' + data.phone,
+      'Registration: ' + data.reg,
+      'Service:      ' + data.service,
+      '',
+      'Notes:',
+      data.notes || '(none)',
+      '',
+      'Sent from westongaragesbath.co.uk'
+    ];
+    return 'mailto:' + INBOX +
+           '?subject=' + encodeURIComponent(subject) +
+           '&body='    + encodeURIComponent(lines.join('\n'));
+  }
+
+  if (form) {
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      var problems = validate();
+      if (problems.length) {
+        problems[0].focus();
+        return;
+      }
+
+      var data = {
+        name:    document.getElementById('name').value.trim(),
+        phone:   document.getElementById('phone').value.trim(),
+        reg:     reg.value.trim(),
+        service: document.getElementById('service').value,
+        notes:   document.getElementById('notes').value.trim()
+      };
+
+      summary.textContent =
+        data.name + ' · ' + data.phone + '\n' +
+        data.reg + ' · ' + data.service;
+
+      form.classList.add('hidden');
+      done.classList.remove('hidden');
+      done.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+
+      window.location.assign(buildMailto(data));
+    });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      form.reset();
+      ['name', 'phone', 'reg', 'service'].forEach(function (id) {
+        setError(document.getElementById(id), '');
+      });
+      done.classList.add('hidden');
+      form.classList.remove('hidden');
+      document.getElementById('name').focus();
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
