@@ -216,7 +216,7 @@
 
   <footer>
     List targets are rounded down to EA's valid price increments (50 / 100 / 250 / 500 / 1,000).
-    Source: <code>list_fc27_players</code> via Parse.bot, min rating 80, league 13.
+    Source: <code>list_fc27_players</code> via Parse.bot (through your proxy), min rating 80, league 13.
   </footer>
 </div>
 
@@ -225,8 +225,9 @@
   "use strict";
 
   // ---- Config -------------------------------------------------------------
-  var API_BASE = "https://api.parse.bot/scraper/aceab8c4-b37d-4567-86d1-52688300a90b/list_fc27_players";
-  var API_KEY = "pmx_9b028386";
+  // Your Cloudflare Worker URL (see fc-proxy-worker.js). It holds the Parse.bot
+  // API key and forwards to list_fc27_players, so no key lives in this page.
+  var PROXY_URL = ""; // e.g. "https://fc-proxy.yourname.workers.dev"
   var API_PARAMS = { min_rating: 80, league_id: 13 };
   var MARKUP = 0.15;
   var EA_TAX = 0.05;
@@ -449,7 +450,7 @@
   function buildUrl(page) {
     var params = new URLSearchParams({ page: String(page) });
     Object.keys(API_PARAMS).forEach(function (k) { params.set(k, String(API_PARAMS[k])); });
-    return API_BASE + "?" + params.toString();
+    return PROXY_URL.replace(/\/+$/, "") + "/?" + params.toString();
   }
 
   function loadMarket() {
@@ -459,10 +460,19 @@
     els.refresh.disabled = true;
     hideNotice();
 
-    fetch(buildUrl(page), {
-      method: "GET",
-      headers: { "X-API-Key": API_KEY, "Accept": "application/json" }
-    })
+    if (!PROXY_URL) {
+      els.refresh.disabled = false;
+      setStatus("error", "Proxy not set");
+      showNotice(
+        "<strong>No proxy configured.</strong> Deploy <code>fc-proxy-worker.js</code> to Cloudflare Workers, " +
+        "then paste its URL into <code>PROXY_URL</code> near the top of this file's script.<br>" +
+        '<button type="button" id="load-sample">Try the UI with sample data</button>'
+      );
+      render();
+      return;
+    }
+
+    fetch(buildUrl(page), { method: "GET", headers: { "Accept": "application/json" } })
       .then(function (res) {
         if (!res.ok) {
           return res.text().then(function (body) {
@@ -491,9 +501,8 @@
         setStatus("error", "Fetch failed");
         showNotice(
           "<strong>Couldn't load market data:</strong> " + escapeHtml(err.message || String(err)) +
-          "<br>If this says <em>Failed to fetch</em>, the API is likely blocking browser (CORS) requests " +
-          "or you're offline. Opening the file via a local server (e.g. <code>npx serve</code>) won't bypass CORS; " +
-          "a small proxy would.<br>" +
+          "<br>If this says <em>Failed to fetch</em>, check <code>PROXY_URL</code> is correct, the Worker is deployed, " +
+          "and its <code>ALLOWED_ORIGIN</code> matches where this page is opened from (or is unset).<br>" +
           '<button type="button" id="load-sample">Try the UI with sample data</button>'
         );
         render();
