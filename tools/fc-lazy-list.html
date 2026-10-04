@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FC Lazy-List Calculator</title>
+<meta name="description" content="Live EA FC lazy-list calculator: 15% markup targets, 5% EA tax, net profit filtered by your coin budget.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0d10;
+    --panel: #12161b;
+    --panel-2: #181d24;
+    --line: #232a33;
+    --text: #e6eaf0;
+    --muted: #8a94a3;
+    --accent: #3ddc84;
+    --accent-dim: rgba(61, 220, 132, 0.12);
+    --warn: #f5b942;
+    --danger: #ff5d5d;
+    --radius: 12px;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.5 "Inter", system-ui, -apple-system, Segoe UI, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 16px 64px; }
+
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+  h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--muted); margin: 4px 0 0; font-size: 14px; }
+
+  .status { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .status[data-state="live"] .dot { background: var(--accent); box-shadow: 0 0 0 4px var(--accent-dim); }
+  .status[data-state="loading"] .dot { background: var(--warn); animation: pulse 1s infinite; }
+  .status[data-state="error"] .dot { background: var(--danger); }
+  .status[data-state="sample"] .dot { background: var(--warn); }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  .controls {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 6px; }
+  .field { position: relative; }
+  input, select, button { font: inherit; color: inherit; }
+  input, select {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  #budget { font-family: var(--mono); font-size: 20px; font-weight: 600; padding-left: 36px; }
+  .coin {
+    position: absolute; left: 12px; bottom: 13px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffe08a, #d9a21b);
+  }
+  .btn-row { display: flex; gap: 8px; align-items: flex-end; }
+  button {
+    flex: 1;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: #06210f; border-color: var(--accent); }
+  button.primary:hover { filter: brightness(1.08); }
+  button:disabled { opacity: 0.5; cursor: wait; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+  .stat .k { font-size: 12px; color: var(--muted); }
+  .stat .v { font-family: var(--mono); font-size: 20px; font-weight: 600; margin-top: 2px; }
+  .stat .v.pos { color: var(--accent); }
+
+  .notice {
+    display: none;
+    background: rgba(255, 93, 93, 0.08);
+    border: 1px solid rgba(255, 93, 93, 0.35);
+    color: #ffc9c9;
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  .notice.show { display: block; }
+  .notice.info { background: rgba(245, 185, 66, 0.08); border-color: rgba(245, 185, 66, 0.35); color: #ffe3a8; }
+  .notice button { flex: none; margin-top: 8px; padding: 6px 10px; font-size: 13px; }
+
+  .table-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 720px; }
+  th, td { padding: 12px 14px; text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th {
+    position: sticky; top: 0;
+    background: var(--panel-2);
+    font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    user-select: none;
+  }
+  thead th[data-sort-active]::after { content: attr(data-dir); margin-left: 4px; color: var(--accent); }
+  tbody tr { border-bottom: 1px solid var(--line); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: 0; }
+  tbody tr:hover { background: var(--panel-2); }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  td.profit { color: var(--accent); font-weight: 600; }
+  .player { display: flex; align-items: center; gap: 10px; }
+  .rating {
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    background: var(--accent-dim); color: var(--accent);
+    border-radius: 6px; padding: 2px 6px; min-width: 30px; text-align: center;
+  }
+  .meta { color: var(--muted); font-size: 12px; }
+  .empty { padding: 48px 16px; text-align: center; color: var(--muted); }
+
+  footer { margin-top: 16px; color: var(--muted); font-size: 12px; }
+  footer code { font-family: var(--mono); color: var(--text); }
+
+  @media (max-width: 760px) {
+    .controls { grid-template-columns: 1fr 1fr; }
+    .controls .budget-field { grid-column: 1 / -1; }
+    .stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>FC <span>Lazy-List</span> Calculator</h1>
+      <p class="sub">Buy at market, list at +15%, collect after EA's 5% tax.</p>
+    </div>
+    <div class="status" id="status" data-state="idle"><span class="dot"></span><span id="status-text">Idle</span></div>
+  </header>
+
+  <section class="controls">
+    <div class="field budget-field">
+      <label for="budget">Coin budget</label>
+      <span class="coin" aria-hidden="true"></span>
+      <input id="budget" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 50,000">
+    </div>
+    <div>
+      <label for="min-profit">Min profit / card</label>
+      <input id="min-profit" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+    </div>
+    <div>
+      <label for="page">API page</label>
+      <select id="page">
+        <option value="1">Page 1</option>
+        <option value="2">Page 2</option>
+        <option value="3">Page 3</option>
+        <option value="4">Page 4</option>
+        <option value="5">Page 5</option>
+      </select>
+    </div>
+    <div class="btn-row">
+      <button id="refresh" class="primary" type="button">Refresh</button>
+    </div>
+  </section>
+
+  <div class="notice" id="notice"></div>
+
+  <section class="stats">
+    <div class="stat"><div class="k">Profitable trades</div><div class="v" id="stat-count">0</div></div>
+    <div class="stat"><div class="k">Best single flip</div><div class="v pos" id="stat-best">0</div></div>
+    <div class="stat"><div class="k">Avg. ROI after tax</div><div class="v" id="stat-roi">0%</div></div>
+    <div class="stat"><div class="k">Players loaded</div><div class="v" id="stat-loaded">0</div></div>
+  </section>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-sort="name">Player</th>
+          <th data-sort="buy">Buy price</th>
+          <th data-sort="list">List target (+15%)</th>
+          <th data-sort="tax">EA tax (5%)</th>
+          <th data-sort="net">Net return</th>
+          <th data-sort="profit">Net profit</th>
+          <th data-sort="qty">Qty in budget</th>
+          <th data-sort="total">Total profit</th>
+        </tr>
+      </thead>
+      <tbody id="results">
+        <tr><td colspan="8" class="empty">Enter a coin budget to see trades.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    List targets are rounded down to EA's valid price increments (50 / 100 / 250 / 500 / 1,000).
+    Source: <code>list_fc27_players</code> via Parse.bot, min rating 80, league 13.
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---- Config -------------------------------------------------------------
+  var API_BASE = "https://api.parse.bot/scraper/aceab8c4-b37d-4567-86d1-52688300a90b/list_fc27_players";
+  var API_KEY = "pmx_9b028386";
+  var API_PARAMS = { min_rating: 80, league_id: 13 };
+  var MARKUP = 0.15;
+  var EA_TAX = 0.05;
+
+  // ---- State --------------------------------------------------------------
+  var state = {
+    players: [],
+    sortKey: "profit",
+    sortDir: -1,
+    requestId: 0
+  };
+
+  // ---- DOM ----------------------------------------------------------------
+  var $ = function (id) { return document.getElementById(id); };
+  var els = {
+    budget: $("budget"),
+    minProfit: $("min-profit"),
+    page: $("page"),
+    refresh: $("refresh"),
+    results: $("results"),
+    notice: $("notice"),
+    status: $("status"),
+    statusText: $("status-text"),
+    statCount: $("stat-count"),
+    statBest: $("stat-best"),
+    statRoi: $("stat-roi"),
+    statLoaded: $("stat-loaded"),
+    headers: document.querySelectorAll("thead th[data-sort]")
+  };
+
+  // ---- Helpers ------------------------------------------------------------
+  var fmt = new Intl.NumberFormat("en-GB");
+  function coins(n) { return fmt.format(Math.round(n)); }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  // Accepts 15000, "15,000", "15.5K", "1.2M", "15 000 coins".
+  function parseCoins(v) {
+    if (v == null) return NaN;
+    if (typeof v === "number") return v;
+    var s = String(v).trim().toUpperCase().replace(/[,\s]/g, "");
+    var m = s.match(/^(\d+(?:\.\d+)?)([KM])?/);
+    if (!m) return NaN;
+    var n = parseFloat(m[1]);
+    if (m[2] === "K") n *= 1e3;
+    if (m[2] === "M") n *= 1e6;
+    return n;
+  }
+
+  // EA transfer market price increments.
+  function priceStep(p) {
+    if (p < 1000) return 50;
+    if (p < 10000) return 100;
+    if (p < 50000) return 250;
+    if (p < 100000) return 500;
+    return 1000;
+  }
+  function roundDownToStep(p) {
+    var step = priceStep(p);
+    return Math.floor(p / step) * step;
+  }
+
+  function pick(obj, keys) {
+    for (var i = 0; i < keys.length; i++) {
+      var path = keys[i].split(".");
+      var v = obj;
+      for (var j = 0; j < path.length && v != null; j++) v = v[path[j]];
+      if (v != null && v !== "") return v;
+    }
+    return undefined;
+  }
+
+  // ---- API parsing --------------------------------------------------------
+  // The scraper's response envelope may vary, so find the first array of
+  // player-like objects anywhere near the top of the payload.
+  function extractList(payload) {
+    if (Array.isArray(payload)) return payload;
+    if (!payload || typeof payload !== "object") return [];
+    var preferred = ["players", "data", "results", "items", "rows", "list"];
+    for (var i = 0; i < preferred.length; i++) {
+      var v = payload[preferred[i]];
+      if (Array.isArray(v)) return v;
+      if (v && typeof v === "object") {
+        var inner = extractList(v);
+        if (inner.length) return inner;
+      }
+    }
+    for (var k in payload) {
+      if (Array.isArray(payload[k]) && payload[k].length && typeof payload[k][0] === "object") return payload[k];
+    }
+    return [];
+  }
+
+  var NAME_KEYS = ["name", "player_name", "common_name", "commonName", "full_name", "fullName", "display_name", "player"];
+  var PRICE_KEYS = [
+    "price", "buy_price", "buyPrice", "lowest_bin", "lowestBin", "bin", "market_price",
+    "ps_price", "psPrice", "console_price", "pc_price", "pcPrice", "xbox_price",
+    "prices.ps", "prices.console", "prices.pc", "prices.xbox", "price.ps", "price.pc"
+  ];
+
+  function mapPlayer(raw) {
+    var name = pick(raw, NAME_KEYS);
+    if (name && typeof name === "object") name = pick(name, ["name", "common_name"]);
+    var buy = parseCoins(pick(raw, PRICE_KEYS));
+    if (!name || !isFinite(buy) || buy <= 0) return null;
+    return {
+      name: String(name),
+      rating: pick(raw, ["rating", "ovr", "overall"]),
+      position: pick(raw, ["position", "pos"]),
+      version: pick(raw, ["version", "card_type", "rarity"]),
+      buy: buy
+    };
+  }
+
+  // ---- Trading maths ------------------------------------------------------
+  function computeTrade(p, budget) {
+    var list = roundDownToStep(p.buy * (1 + MARKUP));
+    var tax = Math.floor(list * EA_TAX);
+    var net = list - tax;
+    var profit = net - p.buy;
+    var qty = budget > 0 ? Math.floor(budget / p.buy) : 0;
+    return {
+      name: p.name, rating: p.rating, position: p.position, version: p.version,
+      buy: p.buy, list: list, tax: tax, net: net, profit: profit,
+      roi: profit / p.buy, qty: qty, total: profit * qty
+    };
+  }
+
+  // ---- Rendering ----------------------------------------------------------
+  function setStatus(stateName, text) {
+    els.status.setAttribute("data-state", stateName);
+    els.statusText.textContent = text;
+  }
+
+  function showNotice(html, kind) {
+    els.notice.className = "notice show" + (kind ? " " + kind : "");
+    els.notice.innerHTML = html;
+  }
+  function hideNotice() { els.notice.className = "notice"; els.notice.innerHTML = ""; }
+
+  function render() {
+    var budget = parseCoins(els.budget.value);
+    var minProfit = parseCoins(els.minProfit.value);
+    if (!isFinite(minProfit)) minProfit = 0;
+
+    els.statLoaded.textContent = state.players.length;
+
+    if (!isFinite(budget) || budget <= 0) {
+      els.results.innerHTML = '<tr><td colspan="8" class="empty">' +
+        (state.players.length ? "Enter a coin budget to see trades." : "No market data loaded yet.") + "</td></tr>";
+      updateStats([]);
+      return;
+    }
+
+    var trades = state.players
+      .filter(function (p) { return p.buy <= budget; })
+      .map(function (p) { return computeTrade(p, budget); })
+      .filter(function (t) { return t.profit > 0 && t.profit >= minProfit; });
+
+    var key = state.sortKey, dir = state.sortDir;
+    trades.sort(function (a, b) {
+      if (key === "name") return dir * a.name.localeCompare(b.name);
+      return dir * (a[key] - b[key]);
+    });
+
+    updateStats(trades);
+
+    if (!trades.length) {
+      els.results.innerHTML = '<tr><td colspan="8" class="empty">No profitable trades within ' +
+        coins(budget) + " coins.</td></tr>";
+      return;
+    }
+
+    els.results.innerHTML = trades.map(function (t) {
+      var meta = [t.position, t.version].filter(Boolean).map(escapeHtml).join(" · ");
+      return "<tr>" +
+        '<td><div class="player">' +
+          (t.rating != null ? '<span class="rating">' + escapeHtml(t.rating) + "</span>" : "") +
+          "<div><div>" + escapeHtml(t.name) + "</div>" +
+          (meta ? '<div class="meta">' + meta + "</div>" : "") +
+        "</div></div></td>" +
+        '<td class="num">' + coins(t.buy) + "</td>" +
+        '<td class="num">' + coins(t.list) + "</td>" +
+        '<td class="num">−' + coins(t.tax) + "</td>" +
+        '<td class="num">' + coins(t.net) + "</td>" +
+        '<td class="num profit">+' + coins(t.profit) + "</td>" +
+        '<td class="num">' + t.qty + "</td>" +
+        '<td class="num profit">+' + coins(t.total) + "</td>" +
+        "</tr>";
+    }).join("");
+  }
+
+  function updateStats(trades) {
+    els.statCount.textContent = trades.length;
+    var best = trades.reduce(function (m, t) { return Math.max(m, t.profit); }, 0);
+    els.statBest.textContent = coins(best);
+    var roi = trades.length
+      ? trades.reduce(function (s, t) { return s + t.roi; }, 0) / trades.length
+      : 0;
+    els.statRoi.textContent = (roi * 100).toFixed(2) + "%";
+  }
+
+  function renderSortIndicators() {
+    els.headers.forEach(function (th) {
+      if (th.getAttribute("data-sort") === state.sortKey) {
+        th.setAttribute("data-sort-active", "");
+        th.setAttribute("data-dir", state.sortDir > 0 ? "▲" : "▼");
+      } else {
+        th.removeAttribute("data-sort-active");
+        th.removeAttribute("data-dir");
+      }
+    });
+  }
+
+  // ---- Data loading -------------------------------------------------------
+  function buildUrl(page) {
+    var params = new URLSearchParams({ page: String(page) });
+    Object.keys(API_PARAMS).forEach(function (k) { params.set(k, String(API_PARAMS[k])); });
+    return API_BASE + "?" + params.toString();
+  }
+
+  function loadMarket() {
+    var id = ++state.requestId;
+    var page = els.page.value;
+    setStatus("loading", "Fetching page " + page + "…");
+    els.refresh.disabled = true;
+    hideNotice();
+
+    fetch(buildUrl(page), {
+      method: "GET",
+      headers: { "X-API-Key": API_KEY, "Accept": "application/json" }
+    })
+      .then(function (res) {
+        if (!res.ok) {
+          return res.text().then(function (body) {
+            throw new Error("HTTP " + res.status + (body ? " — " + body.slice(0, 200) : ""));
+          });
+        }
+        return res.json();
+      })
+      .then(function (payload) {
+        if (id !== state.requestId) return; // a newer request superseded this one
+        var raw = extractList(payload);
+        var players = raw.map(mapPlayer).filter(Boolean);
+        state.players = players;
+        if (!players.length) {
+          console.warn("Unrecognised API payload:", payload);
+          setStatus("error", "No priced players");
+          showNotice("The API responded, but no player names/prices could be parsed. " +
+            "Check the browser console for the raw payload.");
+        } else {
+          setStatus("live", "Live · " + new Date().toLocaleTimeString());
+        }
+        render();
+      })
+      .catch(function (err) {
+        if (id !== state.requestId) return;
+        setStatus("error", "Fetch failed");
+        showNotice(
+          "<strong>Couldn't load market data:</strong> " + escapeHtml(err.message || String(err)) +
+          "<br>If this says <em>Failed to fetch</em>, the API is likely blocking browser (CORS) requests " +
+          "or you're offline. Opening the file via a local server (e.g. <code>npx serve</code>) won't bypass CORS; " +
+          "a small proxy would.<br>" +
+          '<button type="button" id="load-sample">Try the UI with sample data</button>'
+        );
+        render();
+      })
+      .then(function () {
+        if (id === state.requestId) els.refresh.disabled = false;
+      });
+  }
+
+  // Clearly-labelled placeholder data so the calculator can be exercised offline.
+  function loadSample() {
+    state.requestId++;
+    state.players = [
+      { name: "Sample Striker", rating: 88, position: "ST", buy: 42000 },
+      { name: "Sample Winger", rating: 86, position: "RW", buy: 18500 },
+      { name: "Sample Midfielder", rating: 84, position: "CM", buy: 6200 },
+      { name: "Sample Defender", rating: 83, position: "CB", buy: 3100 },
+      { name: "Sample Keeper", rating: 82, position: "GK", buy: 1400 },
+      { name: "Sample Full-back", rating: 81, position: "LB", buy: 900 }
+    ];
+    els.refresh.disabled = false;
+    setStatus("sample", "Sample data (not live)");
+    showNotice("Showing <strong>sample data</strong> — these are not real market prices. Press Refresh to retry the live API.", "info");
+    render();
+  }
+
+  // ---- Event wiring -------------------------------------------------------
+  function formatInputInPlace(input) {
+    var digits = input.value.replace(/[^\d]/g, "");
+    var formatted = digits ? fmt.format(Number(digits)) : "";
+    if (formatted !== input.value) {
+      var fromEnd = input.value.length - (input.selectionStart || 0);
+      input.value = formatted;
+      var pos = Math.max(0, formatted.length - fromEnd);
+      input.setSelectionRange(pos, pos);
+    }
+  }
+
+  els.budget.addEventListener("input", function () { formatInputInPlace(els.budget); render(); });
+  els.minProfit.addEventListener("input", function () { formatInputInPlace(els.minProfit); render(); });
+  els.refresh.addEventListener("click", loadMarket);
+  els.page.addEventListener("change", loadMarket);
+
+  // Delegated so it works for the button injected into the notice.
+  els.notice.addEventListener("click", function (e) {
+    if (e.target && e.target.id === "load-sample") loadSample();
+  });
+
+  els.headers.forEach(function (th) {
+    th.addEventListener("click", function () {
+      var key = th.getAttribute("data-sort");
+      if (state.sortKey === key) state.sortDir *= -1;
+      else { state.sortKey = key; state.sortDir = key === "name" ? 1 : -1; }
+      renderSortIndicators();
+      render();
+    });
+  });
+
+  // Script sits at the end of <body>, so the DOM is ready.
+  renderSortIndicators();
+  loadMarket();
+})();
+</script>
+</body>
+</html>
